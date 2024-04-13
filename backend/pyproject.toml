@@ -8,6 +8,7 @@ authors = ["samrqs <samarassk@gmail.com>"]
 python = "^3.10"
 Django = "^5.0.4"
 django-admin = "^2.0.2"
+psycopg2-binary = "^2.9.9"
 
 [tool.poetry.dev-dependencies]
 

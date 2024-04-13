@@ -10,3 +10,17 @@ services:
       - "8000:8000"
     env_file:
       - ./backend/.env.dev
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=sky_sight
+
+volumes:
+  postgres_data:
