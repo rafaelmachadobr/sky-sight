@@ -14,7 +14,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
+# install Poetry
 RUN pip install poetry
 
 # copy the rest of your code
