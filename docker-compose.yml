@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: sky-sight-backend
+    build: ./backend
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend/:/usr/src/app/
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: sky-sight-postgres
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev
+
+volumes:
+  postgres_data:
