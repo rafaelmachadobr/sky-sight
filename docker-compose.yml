@@ -4,6 +4,7 @@ services:
   backend:
     container_name: sky-sight-backend
     build: ./backend
+    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend/:/usr/src/app/
     ports:
@@ -14,7 +15,10 @@ services:
       - postgres
 
   postgres:
+    container_name: sky-sight-postgres
     image: postgres:16
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
