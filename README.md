@@ -105,7 +105,7 @@ cp .env.example .env
 4.2. Crie o arquivo `.env` com base no arquivo `.env.docker.example` onde ele usa o postgres como banco de dados
 
 ```bash
-cp .env.docker .env
+cp .env.docker.example .env
 ```
 
 ## Backend
