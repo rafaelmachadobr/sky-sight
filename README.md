@@ -8,34 +8,33 @@ Sky Sight é um projeto que tem como objetivo mostrar a previsão do tempo do pa
 
 ```
 sky-sight
-├── backend  # Contém o código-fonte e configurações relacionadas ao backend do projeto, desenvolvido com Django.
+├── backend  # Código-fonte e configurações do backend do projeto em Django.
 │   ├── project  # Pasta principal do projeto Django.
-│   ├── .env  # Arquivo de variáveis de ambiente para configurações locais do backend.
-│   ├── .env.docker.example  # Arquivo de variáveis de ambiente para configurações do backend quando executado com Docker.
-│   ├── .env.example  # Exemplo de arquivo de variáveis de ambiente para referência ao criar o arquivo .env.
-│   ├── .gitignore  # Arquivo de configuração do Git para especificar arquivos e pastas a serem ignorados no versionamento.
-│   ├── Dockerfile  # Arquivo de configuração do Docker para construir a imagem do contêiner do backend.
-│   ├── entrypoint.sh  # Script de entrada do Docker para configurar o ambiente antes de iniciar o backend.
-│   ├── manage.py  # Arquivo de configuração principal do Django para operações de gerenciamento do projeto.
-│   ├── poetry.lock  # Arquivo gerado pelo Poetry para travar as versões das dependências Python.
-│   └── pyproject.toml  # Arquivo de configuração do Poetry que especifica as dependências e configurações do projeto Python.
+│   ├── .env  # Variáveis de ambiente para configurações locais do backend.
+│   ├── .env.docker.example  # Variáveis de ambiente para configurações do backend com Docker.
+│   ├── .env.example  # Exemplo de variáveis de ambiente.
+│   ├── .gitignore  # Configuração do Git para ignorar arquivos.
+│   ├── Dockerfile  # Configuração do Docker para construir a imagem do backend.
+│   ├── entrypoint.sh  # Script de entrada do Docker.
+│   ├── manage.py  # Configuração principal do Django.
+│   ├── poetry.lock  # Lockfile do Poetry para dependências Python.
+│   └── pyproject.toml  # Configuração do Poetry para dependências do projeto Python.
 │
-├── mobile  # Contém o código-fonte e configurações relacionadas ao aplicativo móvel, desenvolvido com Flutter.
-│   ├── android  # Pasta contendo arquivos e configurações específicos para a plataforma Android.
-│   ├── ios  # Pasta contendo arquivos e configurações específicos para a plataforma iOS.
-│   ├── lib  # Pasta principal do código-fonte do aplicativo Flutter.
-│   ├── test  # Pasta contendo os testes do aplicativo Flutter.
-│   ├── .gitignore  # Arquivo de configuração do Git para especificar arquivos e pastas a serem ignorados no versionamento.
-│   ├── .metadata  # Arquivo de metadados do Flutter para manter informações sobre o projeto.
-│   ├── analysis_options.yaml  # Arquivo de configuração do Flutter para especificar opções de análise estática.
-│   ├── pubspec.lock  # Arquivo gerado pelo Flutter para travar as versões das dependências do aplicativo Flutter.
-│   ├── pubspec.yaml  # Arquivo de configuração do Flutter que especifica as dependências e configurações do projeto.
-│   └── README.md  # Arquivo de documentação específico para o código-fonte do aplicativo móvel.
+├── mobile  # Código-fonte e configurações do aplicativo móvel em Flutter.
+│   ├── android  # Arquivos específicos para Android.
+│   ├── ios  # Arquivos específicos para iOS.
+│   ├── lib  # Código-fonte principal.
+│   ├── test  # Testes do aplicativo.
+│   ├── .gitignore  # Configuração do Git para ignorar arquivos.
+│   ├── .metadata  # Metadados do Flutter.
+│   ├── analysis_options.yaml  # Opções de análise estática do Flutter.
+│   ├── pubspec.lock  # Lockfile do Flutter para dependências.
+│   ├── pubspec.yaml  # Configuração do Flutter para dependências do projeto.
+│   └── README.md  # Documentação específica para o código-fonte do aplicativo móvel.
 │
-├── .gitignore  # Arquivo de configuração do Git para especificar arquivos e pastas a serem ignorados no versionamento global do projeto.
-├── docker-compose.yml  # Arquivo de configuração do Docker Compose para definir serviços, redes e volumes para a aplicação Dockerizada.
-└── README.md  # Arquivo de documentação principal que fornece uma visão geral do projeto, instruções de instalação e outras informações relevantes.
-
+├── .gitignore  # Configuração do Git global.
+├── docker-compose.yml  # Configuração do Docker Compose.
+└── README.md  # Documentação principal do projeto.
 ```
 
 ## Tecnologias Utilizadas
@@ -97,17 +96,17 @@ git checkout develop
 
 4. Crie o arquivo `.env` usando uma das opções abaixo
 
-4.1. Crie o arquivo `.env` com base no arquivo `.env.example` onde ele usar o sqlite como banco de dados e o backend será executado localmente
+   4.1. Crie o arquivo `.env` com base no arquivo `.env.example` onde ele usar o sqlite como banco de dados e o backend será executado localmente
 
-```bash
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
-4.2. Crie o arquivo `.env` com base no arquivo `.env.docker.example` onde ele usar o postgres como banco de dados e o backend será executado com Docker
+   4.2. Crie o arquivo `.env` com base no arquivo `.env.docker.example` onde ele usar o postgres como banco de dados e o backend será executado com Docker
 
-```bash
-cp .env.docker.example .env
-```
+   ```bash
+   cp .env.docker.example .env
+   ```
 
 ## Backend
 
