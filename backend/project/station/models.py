@@ -11,4 +11,3 @@ class HistoryForecast(models.Model):
     velocidade_vento = models.FloatField()
     rajada_vento = models.FloatField()
     chuva = models.FloatField()
-    
