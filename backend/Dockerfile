@@ -14,11 +14,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# update pip
+RUN pip install --upgrade pip
+
 # install Poetry
 RUN pip install poetry
 
 # copy project
-COPY . .
+COPY backend/ .
 
 # install dependencies
 RUN poetry install
