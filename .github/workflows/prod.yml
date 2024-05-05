@@ -36,7 +36,7 @@ jobs:
 
   deploy:
     name: 'Deploy'
-    needs: build
+    needs: build-and-push
     runs-on: self-hosted
 
     steps:
