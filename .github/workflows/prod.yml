@@ -47,4 +47,15 @@ jobs:
           run: sudo docker rm -f sky-sight
 
         - name: Run docker container
-          run: sudo docker run -d -p 8000:8000 -e DEBUG={{ secrets.DEBUG }} -e SECRET_KEY={{ secrets.SECRET_KEY }} -e DJANGO_ALLOWED_HOSTS={{ secrets.DJANGO_ALLOWED_HOSTS }} -e POSTGRES_ENGINE={{ secrets.POSTGRES_ENGINE }} -e POSTGRES_DB={{ secrets.POSTGRES_DB }} -e POSTGRES_USER={{ secrets.POSTGRES_USER }} -e POSTGRES_PASSWORD={{ secrets.POSTGRES_PASSWORD }} -e POSTGRES_HOST={{ secrets.POSTGRES_HOST }} -e POSTGRES_PORT={{ secrets.POSTGRES_PORT }} -e DATABASE={{ secrets.DATABASE }} --name sky-sight rafaelmachadobr/sky-sight:latest
+          run: sudo docker run -d -p 8000:8000 \
+            -e DEBUG="$DEBUG" \
+            -e SECRET_KEY="$SECRET_KEY" \
+            -e DJANGO_ALLOWED_HOSTS="$DJANGO_ALLOWED_HOSTS" \
+            -e POSTGRES_ENGINE="$POSTGRES_ENGINE" \
+            -e POSTGRES_DB="$POSTGRES_DB" \
+            -e POSTGRES_USER="$POSTGRES_USER" \
+            -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+            -e POSTGRES_HOST="$POSTGRES_HOST" \
+            -e POSTGRES_PORT="$POSTGRES_PORT" \
+            -e DATABASE="$DATABASE" \
+            --name sky-sight rafaelmachadobr/sky-sight:latest
