@@ -28,7 +28,7 @@ class TwentyFourHourForecast extends StatelessWidget {
                 PhosphorIcon(PhosphorIconsRegular.clock),
                 const SizedBox(width: 4.0),
                 Text(
-                  '24-Hour Forecast',
+                  'Previsão de 24 horas',
                   style: semiboldText.copyWith(fontSize: 16),
                 ),
               ],

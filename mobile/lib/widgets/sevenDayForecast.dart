@@ -25,7 +25,7 @@ class SevenDayForecast extends StatelessWidget {
               PhosphorIcon(PhosphorIconsRegular.calendar),
               const SizedBox(width: 4.0),
               Text(
-                '7-Day Forecast',
+                'Previsão para 7 dias',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -41,7 +41,7 @@ class SevenDayForecast extends StatelessWidget {
                       textStyle: mediumText.copyWith(fontSize: 14.0),
                       foregroundColor: primaryBlue,
                     ),
-                    child: Text('more details ▶'),
+                    child: Text('mais detalhes ▶'),
                     onPressed: weatherProv.isLoading
                         ? null
                         : () {

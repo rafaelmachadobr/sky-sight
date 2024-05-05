@@ -40,7 +40,7 @@ class MainWeatherDetail extends StatelessWidget {
                           PhosphorIconsRegular.thermometerSimple,
                           color: Colors.white,
                         ),
-                        title: 'Feels Like',
+                        title: 'Sensação',
                         data: weatherProv.isCelsius
                             ? '${weatherProv.weather.feelsLike.toStringAsFixed(1)}°'
                             : '${weatherProv.weather.feelsLike.toFahrenheit().toStringAsFixed(1)}°'),
@@ -55,9 +55,9 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.drop,
                         color: Colors.white,
                       ),
-                      title: 'Precipitation',
+                      title: 'Precipitação',
                       data:
-                          '${weatherProv.additionalWeatherData.precipitation}%',
+                          '10%',
                     ),
                     VerticalDivider(
                       thickness: 1.0,
@@ -70,9 +70,9 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.sun,
                         color: Colors.white,
                       ),
-                      title: 'UV Index',
+                      title: 'Índice UV',
                       data: uviValueToString(
-                        weatherProv.additionalWeatherData.uvi,
+                        5
                       ),
                     ),
                   ],
@@ -93,7 +93,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.wind,
                         color: Colors.white,
                       ),
-                      title: 'Wind',
+                      title: 'Vento',
                       data: '${weatherProv.weather.windSpeed} m/s',
                     ),
                     VerticalDivider(
@@ -107,7 +107,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.dropHalfBottom,
                         color: Colors.white,
                       ),
-                      title: 'Humidity',
+                      title: 'Umidade',
                       data: '${weatherProv.weather.humidity}%',
                     ),
                     VerticalDivider(
@@ -121,8 +121,8 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.cloud,
                         color: Colors.white,
                       ),
-                      title: 'Cloudiness',
-                      data: '${weatherProv.additionalWeatherData.clouds}%',
+                      title: 'Nebulosidade',
+                      data: '23%',
                     ),
                   ],
                 ),

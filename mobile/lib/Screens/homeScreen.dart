@@ -99,20 +99,20 @@ class CustomSearchBar extends StatefulWidget {
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
   List<String> _citiesSuggestion = [
-    'New York',
-    'Tokyo',
-    'Dubai',
-    'London',
-    'Singapore',
-    'Sydney',
-    'Wellington'
+    'Parque Ibirapuera',
+    'São Paulo',
+    'Brasília',
+    'Santos',
+    'Vancouver',
+    'Miami Beach',
+    'Sydney'
   ];
 
   @override
   Widget build(BuildContext context) {
     return FloatingSearchBar(
       controller: widget.fsc,
-      hint: 'Search...',
+      hint: 'Buscar...',
       clearQueryOnClose: false,
       scrollPadding: const EdgeInsets.only(top: 16.0, bottom: 56.0),
       transitionDuration: const Duration(milliseconds: 400),

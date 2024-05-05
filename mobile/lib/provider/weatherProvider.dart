@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/models/additionalWeatherData.dart';
+//import 'package:flutter_weather/models/additionalWeatherData.dart';
 import 'package:flutter_weather/models/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -12,9 +12,9 @@ import '../models/hourlyWeather.dart';
 import '../models/weather.dart';
 
 class WeatherProvider with ChangeNotifier {
-  String apiKey = 'SUA CHAVE DA API';
+  String apiKey = 'YOUR API KEY';
   late Weather weather;
-  late AdditionalWeatherData additionalWeatherData;
+  //late AdditionalWeatherData additionalWeatherData;
   LatLng? currentLocation;
   List<HourlyWeather> hourlyWeather = [];
   List<DailyWeather> dailyWeather = [];
@@ -97,7 +97,7 @@ class WeatherProvider with ChangeNotifier {
 
   Future<void> getCurrentWeather(LatLng location) async {
     Uri url = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&units=metric&appid=$apiKey',
+      'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&units=metric&appid=$apiKey&lang=pt_br',
     );
     try {
       final response = await http.get(url);
@@ -141,7 +141,7 @@ class WeatherProvider with ChangeNotifier {
   Future<GeocodeData?> locationToLatLng(String location) async {
     try {
       Uri url = Uri.parse(
-        'http://api.openweathermap.org/geo/1.0/direct?q=$location&limit=5&appid=$apiKey',
+        'http://api.openweathermap.org/geo/1.0/direct?q=$location&limit=5&appid=$apiKey&lang=pt_br',
       );
       final http.Response response = await http.get(url);
       if (response.statusCode != 200) return null;

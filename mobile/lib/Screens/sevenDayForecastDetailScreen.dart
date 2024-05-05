@@ -54,7 +54,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
-          '7-Day Forecast',
+          'Previsão para 7 dias',
           style: TextStyle(color: Colors.black),
         ),
       ),
