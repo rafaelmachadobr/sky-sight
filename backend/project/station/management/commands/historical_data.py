@@ -1,9 +1,8 @@
-import pandas as pd
-
+import os
 from datetime import datetime
 
+import pandas as pd
 from django.core.management.base import BaseCommand
-
 from project.station import models
 
 class Command(BaseCommand):
@@ -12,8 +11,8 @@ class Command(BaseCommand):
 
 
 def run():
-
-    with open('/home/samaram/CodeSpace/VilaMariana06-04-23-06-04-2024.csv', 'r') as arquivo_csv:
+    # with open("/home/rafael/VilaMariana03-01-23-06-04-2023.csv", 'r') as arquivo_csv:
+    with open("/home/rafael/VilaMariana07-04-24-04-05-2024.csv", 'r') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     for linha in historical_data.values:
