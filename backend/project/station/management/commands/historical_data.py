@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
 def run():
 
-    with open('/home/samaram/CodeSpace/VilaMariana06-04-23-06-04-2024.csv', 'r') as arquivo_csv:
+    with open('/home/samaram/CodeSpace/tabela.csv', 'r') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     for linha in historical_data.values:
