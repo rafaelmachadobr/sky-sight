@@ -11,6 +11,7 @@ django-admin = "^2.0.2"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
 pandas = "^2.2.2"
+gunicorn = "^22.0.0"
 
 [tool.poetry.dev-dependencies]
 
