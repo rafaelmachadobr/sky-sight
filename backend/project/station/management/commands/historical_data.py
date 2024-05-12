@@ -13,13 +13,16 @@ class Command(BaseCommand):
 
 def run():
 
-    with open('/home/samaram/CodeSpace/tabela.csv', 'r') as arquivo_csv:
+    with open('/home/samaram/CodeSpace/VilaMariana03-01-24-11-05-24.csv', 'r') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     for linha in historical_data.values:
 
         date= linha[0]
         data = datetime.strptime(date, "%d/%m/%Y")
+
+        hour= linha[1]
+        hora = int(hour)
 
         temperatura_replace = str(linha[2]).replace(',', '.')
         temperatura = float(temperatura_replace)
@@ -41,6 +44,7 @@ def run():
 
         models.HistoryForecast.objects.create(
             data = data,
+            hora = hora,
             temperatura = temperatura,
             umidade = umidade,
             pressao = pressao,

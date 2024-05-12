@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 class HistoryForecast(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True)
     data = models.DateField()
+    hora = models.IntegerField()
     temperatura = models.FloatField()
     umidade = models.FloatField()
     pressao = models.FloatField()
