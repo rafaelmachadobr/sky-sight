@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 //import 'package:flutter_weather/models/additionalWeatherData.dart';
 import 'package:flutter_weather/models/geocode.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,7 +13,7 @@ import '../models/hourlyWeather.dart';
 import '../models/weather.dart';
 
 class WeatherProvider with ChangeNotifier {
-  String apiKey = 'YOUR API KEY';
+  String apiKey = dotenv.env['OPENWEATHERMAP_API_KEY']!;
   late Weather weather;
   //late AdditionalWeatherData additionalWeatherData;
   LatLng? currentLocation;
