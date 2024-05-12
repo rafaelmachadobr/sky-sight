@@ -4,12 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from .utils import importar_modelo, obter_dados_meteorologicos
+from .utils import importar_modelo, obter_previsoes_temperatura
 
 # from . import models
-# from django.http import Http404, HttpResponse
-# from sklearn.ensemble import RandomForestRegressor
-
 filterwarnings('ignore')
 
 # @api_view(['GET'])
@@ -45,7 +42,7 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     Returns:
         Response: Resposta HTTP contendo a previsão da temperatura, temperatura arredondada,
-                  data e horário da previsão.
+        umidade, pressão, velocidade do vento, direção do vento, condição climática, dica, alerta e data.
     """
     if request.method != "GET":
         return Response(status=405)
@@ -53,30 +50,8 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
     latitude = -23.587
     longitude = -46.655
 
-    (
-        umidade_instantanea, _, velocidade_vento,
-        direcao_vento, dia, mes, ano, hora
-    ) = obter_dados_meteorologicos(latitude, longitude)
-
-    hora = hora - 3
-
-    dia = dia + 1
-
-    media_pressao_inst = 925
-
-    entrada_modelo = [[umidade_instantanea, media_pressao_inst, velocidade_vento,
-                       direcao_vento, dia, mes, ano, hora]]
-
     modelo = importar_modelo("modelo_regressao_linear.sav")
-    previsao = modelo.predict(entrada_modelo)[0]
 
-    mes_formatado = str(mes).zfill(2)
+    previsoes = obter_previsoes_temperatura(latitude, longitude, modelo)
 
-    return Response(
-        {
-            "previsao_temperatura": previsao,
-            "previsao_temperatura_arredondada": round(previsao),
-            "data": f"{dia}/{mes_formatado}/{ano}",
-            "horario": f"{hora}:00"
-        }
-    )
+    return Response({"results": previsoes}, status=200)
