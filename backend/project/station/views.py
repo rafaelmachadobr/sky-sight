@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from .utils import importar_modelo, obter_previsoes_temperatura
+from .utils import get_temperature_predictions, import_model
 
 # from . import models
 filterwarnings('ignore')
@@ -50,8 +50,8 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
     latitude = -23.587
     longitude = -46.655
 
-    modelo = importar_modelo("modelo_regressao_linear.sav")
+    model = import_model("modelo_regressao_linear.sav")
 
-    previsoes = obter_previsoes_temperatura(latitude, longitude, modelo)
+    predictions = get_temperature_predictions(latitude, longitude, model)
 
-    return Response({"results": previsoes}, status=200)
+    return Response({"results": predictions}, status=200)

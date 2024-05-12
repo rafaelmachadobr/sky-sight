@@ -1,3 +1,6 @@
+"""
+Módulo contendo funções utilitárias para processamento de dados meteorológicos.
+"""
 import pickle
 from datetime import datetime
 from pathlib import Path
@@ -7,18 +10,58 @@ import requests
 from .config_file import config
 
 
-def unix_para_data(unix_timestamp):
+def unix_to_date(unix_timestamp: int) -> tuple:
+    """
+    Converte um timestamp UNIX em uma tupla representando a data e hora UTC.
+
+    Args:
+        unix_timestamp (int): Timestamp UNIX a ser convertido.
+
+    Returns:
+        tuple: Tupla contendo (dia, mês, ano, hora) da data e hora correspondentes ao timestamp.
+    """
     data = datetime.utcfromtimestamp(unix_timestamp)
 
-    dia = data.day
-    mes = data.month
-    ano = data.year
-    hora = data.hour
+    day = data.day
+    month = data.month
+    year = data.year
+    hour = data.hour
 
-    return dia, mes, ano, hora
+    return day, month, year, hour
 
 
-def obter_dados_meteorologicos(latitude, longitude):
+def parse_forecast_data(forecast: dict) -> tuple:
+    """
+    Extrai os dados relevantes de uma previsão meteorológica.
+
+    Args:
+        forecast (dict): Dicionário contendo os dados de uma previsão.
+
+    Returns:
+        tuple: Tupla contendo os dados meteorológicos.
+    """
+    timestamp_unix = forecast["dt"]
+    humidity = forecast["main"]["humidity"]
+    pressure = forecast["main"]["pressure"]
+    wind_speed = forecast["wind"]["speed"]
+    wind_direction = forecast["wind"]["deg"]
+
+    day, month, year, hour = unix_to_date(timestamp_unix)
+
+    return humidity, pressure, wind_speed, wind_direction, day, month, year, hour
+
+
+def get_weather_data(latitude: float, longitude: float) -> list:
+    """
+    Obtém os dados meteorológicos para uma determinada localização.
+
+    Args:
+        latitude (float): Latitude da localização.
+        longitude (float): Longitude da localização.
+
+    Returns:
+        list: Lista de tuplas contendo os dados meteorológicos.
+    """
     url = "https://api.openweathermap.org/data/2.5/forecast"
     params = {
         "lat": latitude,
@@ -29,85 +72,154 @@ def obter_dados_meteorologicos(latitude, longitude):
     }
     response = requests.get(url, params=params)
     data = response.json()
-    lista_previsoes = data["list"]
+    forecast_list = data["list"]
 
-    dados_meteorologicos = []
-    for previsao in lista_previsoes:
-        timestamp_unix = previsao["dt"]
-        umidade_instantanea = previsao["main"]["humidity"]
-        pressao_instantanea = previsao["main"]["pressure"]
-        velocidade_vento = previsao["wind"]["speed"]
-        direcao_vento = previsao["wind"]["deg"]
-        dia, mes, ano, hora = unix_para_data(timestamp_unix)
-        dados_meteorologicos.append(
-            (umidade_instantanea, pressao_instantanea, velocidade_vento, direcao_vento, dia, mes, ano, hora))
-
-    return dados_meteorologicos
+    weather_data = [parse_forecast_data(forecast)
+                    for forecast in forecast_list]
+    return weather_data
 
 
-def importar_modelo(nome_modelo: str):
-    BASE_DIR = Path(__file__).resolve().parent.parent
+def import_model(model_name: str) -> object:
+    """
+    Importa um modelo de previsão de temperatura.
 
-    with open(BASE_DIR / f'station/modelos/{nome_modelo}', 'rb') as file:
-        modelo = pickle.load(file)
+    Args:
+        model_name (str): Nome do arquivo contendo o modelo.
 
-    return modelo
+    Returns:
+        object: Objeto do modelo importado.
+    """
+    with open(
+            Path(__file__).resolve().parent.parent /
+        f'station/modelos/{model_name}', 'rb'
+    ) as file:
+        model = pickle.load(file)
+
+    return model
 
 
-def __obter_condicao_dica(temperatura: int):
-    """Retorna a condição climática baseada na temperatura."""
+def __get_condition_tip(temperature: int) -> tuple:
+    """
+    Retorna a condição climática baseada na temperatura.
+
+    Args:
+        temperature (int): Temperatura atual.
+
+    Returns:
+        tuple: Tupla contendo a condição climática e uma dica associada.
+    """
     # Verificando a temperatura para determinar a condição climática
-    if temperatura < 20:
+    if temperature < 20:
         return "Frio", "Use roupas quentes e aproveite uma xícara de chocolate quente!"
-    elif temperatura < 40:
-        # Retorna 'Agradável' se a temperatura estiver entre os limites agradável e quente
+
+    # Retorna 'Agradável' se a temperatura estiver entre os limites agradável e quente
+    if temperature < 40:
         return "Agradável", "Aproveite o clima agradável para um passeio ao ar livre."
-    else:
-        return "Quente", "Mantenha-se fresco e hidratado durante o dia."
+
+    # Se a temperatura for maior ou igual a 40, é considerado quente
+    return "Quente", "Mantenha-se fresco e hidratado durante o dia."
 
 
-def __alerta_climatico(temperatura):
-    """Fornece um alerta climático com base na temperatura e umidade."""
-    if temperatura > 30:
+def __weather_alert(temperature: int) -> str:
+    """
+    Fornece um alerta climático com base na temperatura e umidade.
+
+    Args:
+        temperature (int): Temperatura atual.
+
+    Returns:
+        str: Alerta climático.
+    """
+    if temperature > 30:
         return "Alerta de calor: temperatura muito alta!"
-    elif temperatura > 80:
+
+    if temperature > 80:
         return "Alerta de umidade: risco de chuvas intensas!"
-    else:
-        return "Sem alertas no momento."
+
+    return "Sem alertas no momento."
 
 
-def obter_previsoes_temperatura(latitude, longitude, modelo):
-    dados_meteorologicos = obter_dados_meteorologicos(latitude, longitude)
-    media_pressao_inst = 930
-    previsoes = []
+def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
+    """
+    Cria a entrada do modelo com os dados meteorológicos.
 
-    for dado in dados_meteorologicos:
-        (umidade_instantanea, pressao_instantanea, velocidade_vento,
-         direcao_vento, dia, mes, ano, hora) = dado
+    Args:
+        data (tuple): Tupla contendo os dados meteorológicos.
+        mean_pressure_inst (int): Pressão média instantânea.
 
-        entrada_modelo = [[umidade_instantanea, media_pressao_inst, velocidade_vento,
-                          direcao_vento, dia, mes, ano, hora]]
+    Returns:
+        list: Lista contendo a entrada do modelo.
+    """
+    humidity, _, wind_speed, wind_direction, day, month, year, hour = data
+    return [[humidity, mean_pressure_inst, wind_speed, wind_direction, day, month, year, hour]]
 
-        previsao = modelo.predict(entrada_modelo)[0]
 
-        data_hora = datetime(ano, mes, dia, hora)
-        data_formatada = data_hora.strftime("%Y-%m-%d %H:%M:%S")
+def __get_formatted_date(data: tuple) -> str:
+    """
+    Formata a data e hora dos dados meteorológicos.
 
-        condicao_climatica, dica = __obter_condicao_dica(previsao)
+    Args:
+        data (tuple): Tupla contendo os dados meteorológicos.
 
-        alerta = __alerta_climatico(umidade_instantanea)
+    Returns:
+        str: Data e hora formatadas.
+    """
+    _, _, _, _, day, month, year, hour = data
+    data_time = datetime(year, month, day, hour)
+    return data_time.strftime("%Y-%m-%d %H:%M:%S")
 
-        previsoes.append({
-            "temperatura": previsao,
-            "temperatura_arredondada": round(previsao),
-            "humidade": umidade_instantanea,
-            "pressao": pressao_instantanea,
-            "velocidade_vento": velocidade_vento,
-            "direcao_vento": direcao_vento,
-            "condicao_climatica": condicao_climatica,
-            "dica": dica,
-            "alerta": alerta,
-            "data": data_formatada
-        })
 
-    return previsoes
+def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
+    """
+    Processa os dados meteorológicos e retorna as previsões de temperatura.
+
+    Args:
+        data (tuple): Tupla contendo os dados meteorológicos.
+        model (object): Objeto do modelo de previsão.
+        mean_pressure_inst (int): Pressão média instantânea.
+
+    Returns:
+        dict: Dicionário contendo as previsões de temperatura.
+    """
+    model_input = __get_model_input(data, mean_pressure_inst)
+    prediction = model.predict(model_input)[0]
+    formatted_date = __get_formatted_date(data)
+    condition, tip = __get_condition_tip(prediction)
+    alert = __weather_alert(data[0])  # humidity
+
+    return {
+        "temperatura": prediction,
+        "temperatura_arredondada": round(prediction),
+        "humidade": data[0],
+        "pressao": data[1],
+        "velocidade_vento": data[2],
+        "direcao_vento": data[3],
+        "condicao_climatica": condition,
+        "dica": tip,
+        "alerta": alert,
+        "data": formatted_date
+    }
+
+
+def get_temperature_predictions(latitude: float, longitude: float, model: object) -> list:
+    """
+    Obtém previsões de temperatura para uma determinada localização.
+
+    Args:
+        latitude (float): Latitude da localização.
+        longitude (float): Longitude da localização.
+        model (object): Objeto do modelo de previsão.
+
+    Returns:
+        list: Lista de previsões de temperatura.
+    """
+    weather_data = get_weather_data(latitude, longitude)
+    mean_pressure_inst = 930
+    predictions = []
+
+    for data in weather_data:
+        prediction_data = __process_weather_data(
+            data, model, mean_pressure_inst)
+        predictions.append(prediction_data)
+
+    return predictions
