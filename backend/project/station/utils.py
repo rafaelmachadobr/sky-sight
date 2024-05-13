@@ -2,6 +2,7 @@
 Módulo contendo funções utilitárias para processamento de dados meteorológicos.
 """
 import pickle
+import numpy as np
 from datetime import datetime
 from math import floor
 from pathlib import Path
@@ -224,3 +225,18 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
         predictions.append(prediction_data)
 
     return predictions
+
+
+def remove_nan_samples(X, y):
+    # Converter para numpy arrays
+    X = np.array(X)
+    y = np.array(y)
+
+    # Identificar índices das amostras com valores NaN nas variáveis de entrada
+    nan_indices = np.any(np.isnan(X), axis=1)
+
+    # Remover amostras com valores NaN tanto de X quanto de y
+    X_cleaned = X[~nan_indices]
+    y_cleaned = y[~nan_indices]
+
+    return X_cleaned, y_cleaned

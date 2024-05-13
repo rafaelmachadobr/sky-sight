@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
 def run():
 
-    with open('/home/samaram/CodeSpace/VilaMariana03-01-24-11-05-24.csv', 'r') as arquivo_csv:
+    with open('/home/samara/Downloads/tabela.csv', 'r') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     for linha in historical_data.values:
@@ -26,6 +26,12 @@ def run():
 
         temperatura_replace = str(linha[2]).replace(',', '.')
         temperatura = float(temperatura_replace)
+
+        temperatura_maxima_replace = str(linha[3]).replace(',', '.')
+        temperatura_maxima = float(temperatura_maxima_replace)
+
+        temperatura_minima_replace = str(linha[4]).replace(',', '.')
+        temperatura_minima = float(temperatura_minima_replace)
 
         umidade_replace = str(linha[5]).replace(',', '.')
         umidade = float(umidade_replace)
@@ -42,13 +48,16 @@ def run():
         chuva_replace = str(linha[18]).replace(',', '.')
         chuva =  float(chuva_replace)
 
-        models.HistoryForecast.objects.create(
+        models.HistoryForecast.objects.update_or_create(
             data = data,
             hora = hora,
+            defaults=dict(
             temperatura = temperatura,
+            temperatura_maxima = temperatura_maxima,
+            temperatura_minima = temperatura_minima,
             umidade = umidade,
             pressao = pressao,
             velocidade_vento = velocidade_vento,
             rajada_vento = rajada_vento,
-            chuva = chuva
+            chuva = chuva)
         )

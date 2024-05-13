@@ -1,35 +1,80 @@
+import numpy as np
+
 from warnings import filterwarnings
 
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from .utils import get_temperature_predictions, import_model
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
 
-# from . import models
+from .utils import get_temperature_predictions, import_model, remove_nan_samples
+
+from . import models
 filterwarnings('ignore')
 
-# @api_view(['GET'])
-# def get_historical_predict(request):
+@api_view(['GET'])
+def get_historical_predict(request):
+    # Filtrar todos os dados disponíveis para a data especificada
+    dados_do_dia = models.HistoryForecast.objects.filter(data="2024-05-12")
 
-#     history_forecast_data = models.HistoryForecast.objects.all()
+    # Se não houver dados disponíveis para o dia especificado, retorne uma resposta de erro
+    if not dados_do_dia.exists():
+        return Response(status=404, data={"message": "Não há dados disponíveis para o dia especificado."})
 
-#     # Extrair características e rótulos
-#     X = [[data.temperatura, data.umidade, data.pressao, data.chuva] for data in history_forecast_data]
-#     y = [d.temperatura for d in history_forecast_data]  #Variavel alvo
+    # Extrair características e rótulos de todos os dados do dia
+    X = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
+    y = [[data.temperatura, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]  # Variáveis alvo
 
-#     # Inicializar e treinar o modelo Random Forest
-#     rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-#     rf_model.fit(X, y)
+    # Verificar e tratar valores ausentes nas variáveis de entrada
+    X, y = remove_nan_samples(X, y)
 
-#     dados_hoje = models.HistoryForecast.objects.filter(data=datetime.date.today())
-#     dados_hoje = dados_hoje.first()
+    # Verificar se restaram amostras após remover as com valores ausentes
+    if len(X) == 0:
+        return Response(status=400, data={"message": "Todos os dados estão ausentes."})
 
-#     dados_previsao = [[dados_hoje.temperatura, dados_hoje.umidade, dados_hoje.pressao, dados_hoje.chuva]]
-#     previsao = rf_model.predict(dados_previsao)
-#     print("Previsão para o dia seguinte:", previsao)
+    # Normalizar as características, se necessário
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
 
-#     return Response(satus=200)
+    # Inicializar e treinar o modelo Random Forest
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_model.fit(X, y)
+
+    # Preparar os dados de previsão para o próximo dia
+    dados_previsao_proximo_dia = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
+
+    # Normalizar os dados de previsão para o próximo dia
+    dados_previsao_proximo_dia = scaler.transform(dados_previsao_proximo_dia)
+
+    # Fazer a previsão para todos os dados do próximo dia
+    previsoes_proximo_dia = rf_model.predict(dados_previsao_proximo_dia)
+
+    # Calcular a média das previsões para o próximo dia
+    previsao_media_proximo_dia = np.mean(previsoes_proximo_dia, axis=0)
+    print("Previsão média para o próximo dia:", previsao_media_proximo_dia)
+
+    # Extrair previsões individuais
+    previsao_temperatura_media = previsao_media_proximo_dia[0]
+    previsao_umidade_media = previsao_media_proximo_dia[1]
+    previsao_pressao_media = previsao_media_proximo_dia[2]
+    previsao_chuva_media = previsao_media_proximo_dia[3]
+    previsao_vento_media = previsao_media_proximo_dia[4]
+
+    # Previsão para temperatura máxima e mínima
+    previsao_temperatura_maxima = np.max(previsoes_proximo_dia[:, 0])
+    previsao_temperatura_minima = np.min(previsoes_proximo_dia[:, 0])
+
+    return Response(status=200, data={
+        "previsao_temperatura_media": previsao_temperatura_media,
+        "previsao_temperatura_maxima": previsao_temperatura_maxima,
+        "previsao_temperatura_minima": previsao_temperatura_minima,
+        "previsao_umidade_media": previsao_umidade_media,
+        "previsao_pressao_media": previsao_pressao_media,
+        "previsao_chuva_media": previsao_chuva_media,
+        "previsao_vento_media": previsao_vento_media,
+    })
 
 
 @api_view(['GET'])
