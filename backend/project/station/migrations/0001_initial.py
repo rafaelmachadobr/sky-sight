@@ -19,6 +19,8 @@ class Migration(migrations.Migration):
                 ('data', models.DateField()),
                 ('hora', models.IntegerField()),
                 ('temperatura', models.FloatField()),
+                ('temperatura_maxima', models.FloatField()),
+                ('temperatura_minima', models.FloatField()),
                 ('umidade', models.FloatField()),
                 ('pressao', models.FloatField()),
                 ('velocidade_vento', models.FloatField()),

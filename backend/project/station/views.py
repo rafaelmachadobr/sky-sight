@@ -1,35 +1,75 @@
+import numpy as np
+
 from warnings import filterwarnings
+
 
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from .utils import get_temperature_predictions, import_model
+from .utils import get_temperature_predictions, import_model, remove_nan_samples
 
-# from . import models
-filterwarnings('ignore')
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
 
-# @api_view(['GET'])
-# def get_historical_predict(request):
+from . import models
+# filterwarnings('ignore')
 
-#     history_forecast_data = models.HistoryForecast.objects.all()
+@api_view(['GET'])
+def get_historical_predict(request):
+    # Filtrar todos os dados disponíveis para a data especificada
+    data_day = models.HistoryForecast.objects.filter(data="2024-05-11")
 
-#     # Extrair características e rótulos
-#     X = [[data.temperatura, data.umidade, data.pressao, data.chuva] for data in history_forecast_data]
-#     y = [d.temperatura for d in history_forecast_data]  #Variavel alvo
+    if not data_day.exists():
+        return Response(status=404, data={"message": "Não há dados disponíveis para o dia especificado."})
 
-#     # Inicializar e treinar o modelo Random Forest
-#     rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-#     rf_model.fit(X, y)
+    # Extrair características e rótulos de todos os dados do dia
+    X = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva] for data in data_day]
+    y = [[data.temperatura, data.umidade, data.pressao, data.chuva] for data in data_day]  # Variáveis alvo
 
-#     dados_hoje = models.HistoryForecast.objects.filter(data=datetime.date.today())
-#     dados_hoje = dados_hoje.first()
+    # Verificar e tratar valores ausentes nas variáveis de entrada
+    X, y = remove_nan_samples(X, y)
 
-#     dados_previsao = [[dados_hoje.temperatura, dados_hoje.umidade, dados_hoje.pressao, dados_hoje.chuva]]
-#     previsao = rf_model.predict(dados_previsao)
-#     print("Previsão para o dia seguinte:", previsao)
+    if len(X) == 0:
+        return Response(status=400, data={"message": "Todos os dados estão ausentes."})
 
-#     return Response(satus=200)
+    # Normalizar as características, se necessário
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    # Inicializar e treinar o modelo Random Forest
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_model.fit(X, y)
+
+    # Preparar os dados de previsão para o próximo dia
+    data_predict_next_day = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva] for data in data_day]
+    data_predict_next_day = scaler.transform(data_predict_next_day)
+
+    # Fazer a previsão para todos os dados do próximo dia
+    predict_next_day = rf_model.predict(data_predict_next_day)
+
+    # Calcular a média das previsões para o próximo dia
+    predict_medium = np.mean(predict_next_day, axis=0)
+    print("Previsão média para o próximo dia:", predict_medium)
+
+    previsao_temperatura_media = predict_medium[0]
+    previsao_umidade_media = predict_medium[1]
+    previsao_pressao_media = predict_medium[2]
+    previsao_chuva_media = predict_medium[3]
+
+    previsao_temperatura_maxima = np.max(predict_next_day[:, 0])
+    previsao_temperatura_minima = np.min(predict_next_day[:, 0])
+
+    data = {
+        "previsao_temperatura_media": previsao_temperatura_media,
+        "previsao_temperatura_maxima": previsao_temperatura_maxima,
+        "previsao_temperatura_minima": previsao_temperatura_minima,
+        "previsao_umidade_media": previsao_umidade_media,
+        "previsao_pressao_media": previsao_pressao_media,
+        "previsao_chuva_media": previsao_chuva_media
+    }
+
+    return Response(data, status=200)
 
 
 @api_view(['GET'])

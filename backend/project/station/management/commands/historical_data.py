@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
 def run():
 
-    with open('/home/samaram/CodeSpace/VilaMariana03-01-24-11-05-24.csv', 'r') as arquivo_csv:
+    with open('/home/samaram/CodeSpace/VilaMariana03-01-23-03-01-24.csv', 'r') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     for linha in historical_data.values:
@@ -26,6 +26,12 @@ def run():
 
         temperatura_replace = str(linha[2]).replace(',', '.')
         temperatura = float(temperatura_replace)
+
+        temperatura_max_replace = str(linha[3]).replace(',', '.')
+        temperatura_max = float(temperatura_max_replace)
+
+        temperatura_min_replace = str(linha[4]).replace(',', '.')
+        temperatura_min = float(temperatura_min_replace)
 
         umidade_replace = str(linha[5]).replace(',', '.')
         umidade = float(umidade_replace)
@@ -46,6 +52,8 @@ def run():
             data = data,
             hora = hora,
             temperatura = temperatura,
+            temperatura_maxima = temperatura_max,
+            temperatura_minima = temperatura_min,
             umidade = umidade,
             pressao = pressao,
             velocidade_vento = velocidade_vento,
