@@ -48,9 +48,10 @@ def run():
         chuva_replace = str(linha[18]).replace(',', '.')
         chuva =  float(chuva_replace)
 
-        models.HistoryForecast.objects.create(
+        models.HistoryForecast.objects.update_or_create(
             data = data,
             hora = hora,
+            defaults=dict(
             temperatura = temperatura,
             temperatura_maxima = temperatura_max,
             temperatura_minima = temperatura_min,
@@ -58,5 +59,5 @@ def run():
             pressao = pressao,
             velocidade_vento = velocidade_vento,
             rajada_vento = rajada_vento,
-            chuva = chuva
+            chuva = chuva)
         )

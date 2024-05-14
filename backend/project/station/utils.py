@@ -6,6 +6,7 @@ import numpy as np
 import requests
 
 from datetime import datetime
+from math import floor
 from pathlib import Path
 
 from .config_file import config
@@ -31,7 +32,7 @@ def unix_to_date(unix_timestamp: int) -> tuple:
     return day, month, year, hour
 
 
-def parse_forecast_data(forecast: dict) -> tuple:
+def __parse_forecast_data(forecast: dict) -> tuple:
     """
     Extrai os dados relevantes de uma previsão meteorológica.
 
@@ -52,7 +53,7 @@ def parse_forecast_data(forecast: dict) -> tuple:
     return humidity, pressure, wind_speed, wind_direction, day, month, year, hour
 
 
-def get_weather_data(latitude: float, longitude: float) -> list:
+def __get_weather_data(latitude: float, longitude: float) -> list:
     """
     Obtém os dados meteorológicos para uma determinada localização.
 
@@ -75,7 +76,7 @@ def get_weather_data(latitude: float, longitude: float) -> list:
     data = response.json()
     forecast_list = data["list"]
 
-    weather_data = [parse_forecast_data(forecast)
+    weather_data = [__parse_forecast_data(forecast)
                     for forecast in forecast_list]
     return weather_data
 
@@ -190,7 +191,7 @@ def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
 
     return {
         "temperatura": prediction,
-        "temperatura_arredondada": round(prediction),
+        "temperatura_arredondada": floor(prediction),
         "humidade": data[0],
         "pressao": data[1],
         "velocidade_vento": data[2],
@@ -214,7 +215,7 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
     Returns:
         list: Lista de previsões de temperatura.
     """
-    weather_data = get_weather_data(latitude, longitude)
+    weather_data = __get_weather_data(latitude, longitude)
     mean_pressure_inst = 930
     predictions = []
 
