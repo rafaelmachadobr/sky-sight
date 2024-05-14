@@ -12,5 +12,6 @@ class HistoryForecast(models.Model):
     umidade = models.FloatField()
     pressao = models.FloatField()
     velocidade_vento = models.FloatField()
+    direcao_vento = models.FloatField()
     rajada_vento = models.FloatField()
     chuva = models.FloatField()

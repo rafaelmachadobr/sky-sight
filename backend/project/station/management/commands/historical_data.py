@@ -42,6 +42,9 @@ def run():
         velocidade_vento_replace = str(linha[14]).replace(',', '.')
         velocidade_vento =  float(velocidade_vento_replace)
 
+        direcao_vento_replace = str(linha[15]).replace(',', '.')
+        direcao_vento =  float(direcao_vento_replace)
+
         rajada_vento_replace = str(linha[16]).replace(',', '.')
         rajada_vento =  float(rajada_vento_replace)
 
@@ -58,6 +61,7 @@ def run():
             umidade = umidade,
             pressao = pressao,
             velocidade_vento = velocidade_vento,
+            direcao_vento = direcao_vento,
             rajada_vento = rajada_vento,
             chuva = chuva)
         )
