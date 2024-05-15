@@ -20,6 +20,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env
+      - ./.env.dev
+
+  jupyter:
+    container_name: sky-sight-jupyter
+    hostname: jupyter
+    image: jupyter/minimal-notebook
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - ./jupyter:/project
+    working_dir: /project
+    command: "bash run_jupyterlab.sh"
+
 volumes:
   postgres_data:
