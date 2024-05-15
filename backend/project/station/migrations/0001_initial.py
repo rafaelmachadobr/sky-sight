@@ -16,8 +16,7 @@ class Migration(migrations.Migration):
             name='HistoryForecast',
             fields=[
                 ('uuid', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('data', models.DateField()),
-                ('hora', models.IntegerField()),
+                ('dt_sensing', models.DateTimeField()),
                 ('temperatura', models.FloatField()),
                 ('temperatura_maxima', models.FloatField()),
                 ('temperatura_minima', models.FloatField()),
@@ -25,7 +24,6 @@ class Migration(migrations.Migration):
                 ('pressao', models.FloatField()),
                 ('velocidade_vento', models.FloatField()),
                 ('direcao_vento', models.FloatField()),
-                ('rajada_vento', models.FloatField()),
                 ('chuva', models.FloatField()),
             ],
         ),
