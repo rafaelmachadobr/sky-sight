@@ -1,11 +1,10 @@
-import pandas as pd
-
-from tqdm import tqdm
-from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 from django.core.management.base import BaseCommand
 from project.station import models
+from tqdm import tqdm
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -13,8 +12,9 @@ class Command(BaseCommand):
 
 
 def run():
-
-    with open('/home/samaram/CodeSpace/VilaMariana03-01-23-03-01-24.csv', 'r') as arquivo_csv:
+    arquivo_csv = "VilaMariana03-01-23-03-01-24.csv"
+    with open(Path(__file__).resolve().parent.parent /
+              f'station/dados/{arquivo_csv}', 'rb') as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     total_linhas = len(historical_data)
@@ -37,26 +37,26 @@ def run():
         umidade = float(umidade_replace)
 
         pressao_replace = str(linha[11]).replace(',', '.')
-        pressao =  float(pressao_replace)
+        pressao = float(pressao_replace)
 
         velocidade_vento_replace = str(linha[14]).replace(',', '.')
-        velocidade_vento =  float(velocidade_vento_replace)
+        velocidade_vento = float(velocidade_vento_replace)
 
         direcao_vento_replace = str(linha[15]).replace(',', '.')
-        direcao_vento =  float(direcao_vento_replace)
+        direcao_vento = float(direcao_vento_replace)
 
         chuva_replace = str(linha[18]).replace(',', '.')
-        chuva =  float(chuva_replace)
+        chuva = float(chuva_replace)
 
         models.HistoryForecast.objects.update_or_create(
-            dt_sensing = dt_sensing,
+            dt_sensing=dt_sensing,
             defaults=dict(
-            temperatura = temperatura,
-            temperatura_maxima = temperatura_max,
-            temperatura_minima = temperatura_min,
-            umidade = umidade,
-            pressao = pressao,
-            velocidade_vento = velocidade_vento,
-            direcao_vento = direcao_vento,
-            chuva = chuva)
+                temperatura=temperatura,
+                temperatura_maxima=temperatura_max,
+                temperatura_minima=temperatura_min,
+                umidade=umidade,
+                pressao=pressao,
+                velocidade_vento=velocidade_vento,
+                direcao_vento=direcao_vento,
+                chuva=chuva)
         )
