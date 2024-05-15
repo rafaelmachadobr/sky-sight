@@ -1,4 +1,8 @@
 from pathlib import Path
+import pandas as pd
+
+from tqdm import tqdm
+from datetime import datetime, time
 
 import pandas as pd
 from django.core.management.base import BaseCommand
@@ -12,7 +16,7 @@ class Command(BaseCommand):
 
 
 def run():
-    arquivo_csv = "VilaMariana03-01-23-03-01-24.csv"
+    arquivo_csv = "VilaMariana04-01-24-15-05-2024.csv"
     caminho_dados = Path(__file__).resolve(
     ).parent.parent.parent / 'dados' / arquivo_csv
 
@@ -23,9 +27,10 @@ def run():
     total_linhas = len(historical_data)
     for linha in tqdm(historical_data.values, total=total_linhas):
 
-        data = pd.to_datetime(linha[0], format='%d/%m/%Y')
-        hora = pd.to_timedelta(linha[1], unit='h')
-        dt_sensing = data + hora
+        data = datetime.strptime(linha[0], '%d/%m/%Y').date()
+        hora_str_padded = str(linha[1]).zfill(4)
+        hora = time(int(hora_str_padded[:2]), int(hora_str_padded[2:]))
+        dt_sensing = datetime.combine(data, hora)
 
         temperatura_replace = str(linha[2]).replace(',', '.')
         temperatura = float(temperatura_replace)
@@ -51,15 +56,15 @@ def run():
         chuva_replace = str(linha[18]).replace(',', '.')
         chuva = float(chuva_replace)
 
-        models.HistoryForecast.objects.update_or_create(
-            dt_sensing=dt_sensing,
-            defaults=dict(
-                temperatura=temperatura,
-                temperatura_maxima=temperatura_max,
-                temperatura_minima=temperatura_min,
-                umidade=umidade,
-                pressao=pressao,
-                velocidade_vento=velocidade_vento,
-                direcao_vento=direcao_vento,
-                chuva=chuva)
+        models.HistoryForecast.objects.get_or_create(
+            dt_sensing = dt_sensing,
+            defaults= dict(
+            temperatura = temperatura,
+            temperatura_maxima = temperatura_max,
+            temperatura_minima = temperatura_min,
+            umidade = umidade,
+            pressao = pressao,
+            velocidade_vento = velocidade_vento,
+            direcao_vento = direcao_vento,
+            chuva = chuva)
         )
