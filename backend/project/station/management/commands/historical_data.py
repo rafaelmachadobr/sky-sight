@@ -13,8 +13,11 @@ class Command(BaseCommand):
 
 def run():
     arquivo_csv = "VilaMariana03-01-23-03-01-24.csv"
-    with open(Path(__file__).resolve().parent.parent /
-              f'station/dados/{arquivo_csv}', 'rb') as arquivo_csv:
+    caminho_dados = Path(__file__).resolve(
+    ).parent.parent.parent / 'dados' / arquivo_csv
+
+    print(caminho_dados)
+    with open(caminho_dados) as arquivo_csv:
         historical_data = pd.read_csv(arquivo_csv, sep=';', encoding='utf-8')
 
     total_linhas = len(historical_data)
