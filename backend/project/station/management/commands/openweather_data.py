@@ -42,8 +42,9 @@ def run():
 
     try:
         models.HistoryForecast.objects.get(dt_sensing=dt_sensing)
+        print(models.HistoryForecast.objects.get(dt_sensing=dt_sensing))
+        print('already exists in the database:', dt_sensing)
     except models.HistoryForecast.DoesNotExist:
-
         models.HistoryForecast.objects.get_or_create(
             dt_sensing = dt_sensing,
             defaults= dict(
@@ -56,5 +57,4 @@ def run():
             direcao_vento = direcao_vento,
             chuva = chuva)
         )
-
         print('dt_sensing created:', dt_sensing)
