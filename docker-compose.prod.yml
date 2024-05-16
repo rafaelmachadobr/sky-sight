@@ -1,7 +1,9 @@
 services:
   backend:
     container_name: sky-sight
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.prod
     volumes:
       - ./backend/:/usr/src/app/
     ports:

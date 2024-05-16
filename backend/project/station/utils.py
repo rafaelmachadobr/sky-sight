@@ -2,12 +2,12 @@
 Módulo contendo funções utilitárias para processamento de dados meteorológicos.
 """
 import pickle
-import numpy as np
-import requests
-
 from datetime import datetime
 from math import floor
 from pathlib import Path
+
+import numpy as np
+import requests
 
 from .config_file import config
 
@@ -132,28 +132,30 @@ def __weather_alert(temperature: int) -> str:
     Returns:
         str: Alerta climático.
     """
+    alerts = []
+
     if temperature > 30:
         alerts.append("Proteja-se do Sol e do Calor:")
         alerts.extend([
-            "- Evite a exposição direta ao sol das 10h às 16h."
-            "- Use protetor solar para evitar queimaduras solares e danos à pele."
-            "- Utilize chapéus e óculos escuros, principálmente se tiver pele clara."
-            "- Proteja as crianças com chapéus de abas e roupas leves."
-            "- Vista roupas leves e que não retenham calor."
-            "- Diminua os esforços físicos e descanse frequentemente em locais com sombra fresca."
-            "- Em veículos sem ar-condicionado, mantenha as janelas abertas para a ventilação."
-            "- Nunca deixe crianças e animais dentro de veículos estacionados, mesmo que por curto período."
-    ])
+            "Evite a exposição direta ao sol das 10h às 16h."
+            "Use protetor solar para evitar queimaduras solares e danos à pele."
+            "Utilize chapéus e óculos escuros, principálmente se tiver pele clara."
+            "Proteja as crianças com chapéus de abas e roupas leves."
+            "Vista roupas leves e que não retenham calor."
+            "Diminua os esforços físicos e descanse frequentemente em locais com sombra fresca."
+            "Em veículos sem ar-condicionado, mantenha as janelas abertas para a ventilação."
+            "Nunca deixe crianças e animais dentro de veículos estacionados, mesmo que por curto período."
+        ])
     if temperature >= 25:
         alerts.append("Hidratação é fundamental:")
         alerts.extend([
-            "- Aumente a ingestão de água ou de sucos de frutas naturais, sem adição de açúcar."
-            "- Evite bebidas alcoólicas e com elevado teor de açúcar."
-            "- Faça refeições leves, pouco condimentadas e mais frequentes."
-            "- Recém-nascidos, crianças, idosos e pessoas doentes podem não sentir sede. Ofereça água sempre."
+            "Aumente a ingestão de água ou de sucos de frutas naturais, sem adição de açúcar."
+            "Evite bebidas alcoólicas e com elevado teor de açúcar."
+            "Faça refeições leves, pouco condimentadas e mais frequentes."
+            "Recém-nascidos, crianças, idosos e pessoas doentes podem não sentir sede. Ofereça água sempre."
         ])
 
-    return "\n".join(alerts) if alerts else "Sem alertas no momento."
+    return alerts if alerts else "Sem alertas no momento."
 
 
 def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
@@ -240,6 +242,7 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
         predictions.append(prediction_data)
 
     return predictions
+
 
 def remove_nan_samples(X, y):
     # Converter para numpy arrays
