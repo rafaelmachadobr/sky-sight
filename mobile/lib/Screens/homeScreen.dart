@@ -12,7 +12,7 @@ import '../theme/textStyle.dart';
 import '../widgets/WeatherInfoHeader.dart';
 import '../widgets/mainWeatherDetail.dart';
 import '../widgets/mainWeatherInfo.dart';
-import '../widgets/sevenDayForecast.dart';
+import '../widgets/fiveDayForecast.dart';
 import '../widgets/twentyFourHourForecast.dart';
 
 import 'requestError.dart';
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 24.0),
                   TwentyFourHourForecast(),
                   const SizedBox(height: 18.0),
-                  SevenDayForecast(),
+                  FiveDayForecast(),
                 ],
               ),
               CustomSearchBar(fsc: fsc),
@@ -99,7 +99,6 @@ class CustomSearchBar extends StatefulWidget {
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
   List<String> _citiesSuggestion = [
-    'Parque Ibirapuera',
     'São Paulo',
     'Brasília',
     'Santos',

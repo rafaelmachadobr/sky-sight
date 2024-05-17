@@ -57,7 +57,7 @@ class MainWeatherDetail extends StatelessWidget {
                       ),
                       title: 'Precipitação',
                       data:
-                          '10%',
+                          '${weatherProv.additionalWeatherData.precipitation}%',
                     ),
                     VerticalDivider(
                       thickness: 1.0,
@@ -72,7 +72,7 @@ class MainWeatherDetail extends StatelessWidget {
                       ),
                       title: 'Índice UV',
                       data: uviValueToString(
-                        5
+                        5,
                       ),
                     ),
                   ],
@@ -122,7 +122,7 @@ class MainWeatherDetail extends StatelessWidget {
                         color: Colors.white,
                       ),
                       title: 'Nebulosidade',
-                      data: '23%',
+                      data: '${weatherProv.additionalWeatherData.clouds}%',
                     ),
                   ],
                 ),

@@ -28,7 +28,7 @@ class TwentyFourHourForecast extends StatelessWidget {
                 PhosphorIcon(PhosphorIconsRegular.clock),
                 const SizedBox(width: 4.0),
                 Text(
-                  'Previsão de 24 horas',
+                  'Previsão próximas horas',
                   style: semiboldText.copyWith(fontSize: 16),
                 ),
               ],
@@ -104,20 +104,20 @@ class HourlyWeatherWidget extends StatelessWidget {
                 thickness: 2.0,
                 color: primaryBlue,
               ),
-              if (index == 0)
-                Positioned(
-                  top: 2.0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    width: 10.0,
-                    height: 10.0,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                )
+              // if (index == 0)
+              //   Positioned(
+              //     top: 2.0,
+              //     left: 0,
+              //     right: 0,
+              //     child: Container(
+              //       width: 10.0,
+              //       height: 10.0,
+              //       decoration: BoxDecoration(
+              //         color: Colors.yellow,
+              //         shape: BoxShape.circle,
+              //       ),
+              //     ), 
+              //   )
             ],
           ),
           SizedBox(
@@ -136,7 +136,7 @@ class HourlyWeatherWidget extends StatelessWidget {
           ),
           const SizedBox(height: 2.0),
           Text(
-            index == 0 ? 'Now' : DateFormat('hh:mm a').format(data.date),
+            /*index == 0 ? 'Agora' : */DateFormat('hh:mm a').format(data.date),
             style: regularText,
           )
         ],

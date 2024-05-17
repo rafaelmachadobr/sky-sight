@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-//import 'package:flutter_weather/models/additionalWeatherData.dart';
+import 'package:flutter_weather/models/additionalWeatherData.dart';
 import 'package:flutter_weather/models/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +15,7 @@ import '../models/weather.dart';
 class WeatherProvider with ChangeNotifier {
   String apiKey = dotenv.env['OPENWEATHERMAP_API_KEY']!;
   late Weather weather;
-  //late AdditionalWeatherData additionalWeatherData;
+  late AdditionalWeatherData additionalWeatherData;
   LatLng? currentLocation;
   List<HourlyWeather> hourlyWeather = [];
   List<DailyWeather> dailyWeather = [];
@@ -86,7 +86,7 @@ class WeatherProvider with ChangeNotifier {
     try {
       currentLocation = LatLng(locData.latitude, locData.longitude);
       await getCurrentWeather(currentLocation!);
-      //await getDailyWeather(currentLocation!);
+      await getDailyWeather(currentLocation!);
     } catch (e) {
       print(e);
       isRequestError = true;
@@ -112,32 +112,71 @@ class WeatherProvider with ChangeNotifier {
     }
   }
 
-  // Future<void> getDailyWeather(LatLng location) async {
-  //   isLoading = true;
-  //   notifyListeners();
+  Future<void> getDailyWeather(LatLng location) async {
+    isLoading = true;
+    notifyListeners();
 
-  //   Uri dailyUrl = Uri.parse(
-  //     'https://api.openweathermap.org/data/2.5/onecall?lat=${location.latitude}&lon=${location.longitude}&units=metric&exclude=minutely,current&appid=$apiKey',
-  //   );
-  //   try {
-  //     final response = await http.get(dailyUrl);
-  //     final dailyData = json.decode(response.body) as Map<String, dynamic>;
-  //     additionalWeatherData = AdditionalWeatherData.fromJson(dailyData);
-  //     List dailyList = dailyData['daily'];
-  //     List hourlyList = dailyData['hourly'];
-  //     hourlyWeather = hourlyList
-  //         .map((item) => HourlyWeather.fromJson(item))
-  //         .toList()
-  //         .take(24)
-  //         .toList();
-  //     dailyWeather =
-  //         dailyList.map((item) => DailyWeather.fromDailyJson(item)).toList();
-  //   } catch (error) {
-  //     print(error);
-  //     isLoading = false;
-  //     this.isRequestError = true;
-  //   }
-  // }
+    Uri dailyUrl = Uri.parse(
+      'https://api.openweathermap.org/data/2.5/forecast?lat=${location.latitude}&lon=${location.longitude}&appid=$apiKey&units=metric&lang=pt_br',
+    );
+    try {
+      final response = await http.get(dailyUrl);
+      if(response.statusCode == 200){
+      final dailyData = json.decode(response.body) as Map<String, dynamic>;
+      additionalWeatherData = AdditionalWeatherData.fromJson(dailyData);
+      //List dailyList = dailyData['daily'];
+      List hourlyList = dailyData['list'];
+
+        // Filtrando previsões para hoje em intervalos de 3 horas
+      DateTime now = DateTime.now();
+      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59).add(Duration(days: 1));;
+      hourlyWeather = hourlyList
+          .map((item) => HourlyWeather.fromJson(item))
+          .where((item) => item.date.isAfter(now) && item.date.isBefore(endOfDay))
+          .toList();
+      // Convertendo a lista de 3 em 3 horas para HourlyWeather
+        // hourlyWeather = hourlyList
+        //     .map((item) => HourlyWeather.fromJson(item))
+        //     .toList()
+        //     .take(24)
+        //     .toList();
+
+      // hourlyWeather = hourlyList
+      //     .map((item) => HourlyWeather.fromJson(item))
+      //     .toList()
+      //     .take(24)
+      //     .toList();
+
+      // Agrupando por dias
+        Map<String, List> groupedDailyData = {};
+        hourlyList.forEach((item) {
+          String date = item['dt_txt'].split(' ')[0];
+          if (groupedDailyData[date] == null) {
+            groupedDailyData[date] = [];
+          }
+          groupedDailyData[date]!.add(item);
+        });
+
+        dailyWeather = groupedDailyData.entries.map((entry) {
+          // Aqui você pode definir como quer agregar os dados diários
+          // Por exemplo, pegar a previsão do meio-dia ou a média dos dados do dia
+          // No exemplo, pegaremos o primeiro item do dia
+          return DailyWeather.fromDailyJson(entry.value);
+        }).toList();
+
+
+      // dailyWeather =
+      //     dailyList.map((item) => DailyWeather.fromDailyJson(item)).toList();
+      } else{
+        throw Exception('Failed to load weather data');
+      }
+
+    } catch (error) {
+      print(error);
+      isLoading = false;
+      this.isRequestError = true;
+    }
+  }
 
   Future<GeocodeData?> locationToLatLng(String location) async {
     try {
@@ -165,7 +204,7 @@ class WeatherProvider with ChangeNotifier {
       geocodeData = await locationToLatLng(location);
       if (geocodeData == null) throw Exception('Unable to Find Location');
       await getCurrentWeather(geocodeData.latLng);
-      //await getDailyWeather(geocodeData.latLng);
+      await getDailyWeather(geocodeData.latLng);
       // replace location name with data from geocode
       // because data from certain lat long might return local area name
       weather.city = geocodeData.name;

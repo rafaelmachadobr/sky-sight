@@ -11,20 +11,20 @@ import '../helper/utils.dart';
 import '../models/dailyWeather.dart';
 import '../theme/textStyle.dart';
 
-class SevenDayForecastDetail extends StatefulWidget {
-  static const routeName = '/sevenDayForecast';
+class FiveDayForecastDetail extends StatefulWidget {
+  static const routeName = '/fiveDayForecast';
   final int initialIndex;
 
-  const SevenDayForecastDetail({
+  const FiveDayForecastDetail({
     Key? key,
     this.initialIndex = 0,
   }) : super(key: key);
 
   @override
-  State<SevenDayForecastDetail> createState() => _SevenDayForecastDetailState();
+  State<FiveDayForecastDetail> createState() => _FiveDayForecastDetailState();
 }
 
-class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
+class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
   int _selectedIndex = 0;
   late final ScrollController _scrollController;
   static const double _itemWidth = 24.0;
@@ -54,7 +54,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
-          'Previsão para 7 dias',
+          'Previsão para 5 dias',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -213,7 +213,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                             PhosphorIconsRegular.sun,
                             color: Colors.white,
                           ),
-                          data: uviValueToString(_selectedWeather.uvi),
+                          data: uviValueToString(5),
                         ),
                         _ForecastDetailInfoTile(
                           title: 'Precipitation',

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import './provider/weatherProvider.dart';
 import 'screens/homeScreen.dart';
-import 'screens/sevenDayForecastDetailScreen.dart';
+import 'Screens/fiveDayForecastDetailScreen.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -40,10 +40,10 @@ class MyApp extends StatelessWidget {
         // },
         onGenerateRoute: (settings) {
           final arguments = settings.arguments;
-          if (settings.name == SevenDayForecastDetail.routeName) {
+          if (settings.name == FiveDayForecastDetail.routeName) {
             return PageRouteBuilder(
               settings: settings,
-              pageBuilder: (_, __, ___) => SevenDayForecastDetail(
+              pageBuilder: (_, __, ___) => FiveDayForecastDetail(
                 initialIndex: arguments == null ? 0 : arguments as int,
               ),
               transitionsBuilder: (ctx, a, b, c) => CupertinoPageTransition(
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-          // Unknown route
+          //Unknown route
           return MaterialPageRoute(builder: (_) => HomeScreen());
         },
       ),

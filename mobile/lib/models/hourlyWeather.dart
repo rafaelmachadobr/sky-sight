@@ -12,12 +12,16 @@ class HourlyWeather {
     required this.date,
   });
 
+  // HourlyWeather.fromJson(Map<String, dynamic> json) {
+  //   // Inicialize as propriedades com os dados do JSON
+  // }
+
   static HourlyWeather fromJson(dynamic json) {
     return HourlyWeather(
-      temp: (json['temp']).toDouble(),
+      temp: (json['main']['temp']).toDouble(),
       weatherCategory: json['weather'][0]['main'],
       condition: json['weather'][0]['description'],
-      date: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
+      date: DateTime.parse(json['dt_txt']),
     );
   }
 }
