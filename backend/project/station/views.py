@@ -90,7 +90,8 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     Returns:
         Response: Resposta HTTP contendo a previsão da temperatura, temperatura arredondada,
-        umidade, pressão, velocidade do vento, direção do vento, condição climática, dica, alerta e data.
+        umidade, pressão, velocidade do vento, direção do vento, condição climática, dica, 
+        alerta e data.
     """
     if request.method != "GET":
         return Response(status=405)

@@ -5,7 +5,7 @@ import pickle
 from datetime import datetime
 from math import floor
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import requests
@@ -123,7 +123,7 @@ def __get_condition_tip(temperature: int) -> tuple:
     return "Quente", "Mantenha-se fresco e hidratado durante o dia."
 
 
-def __weather_alert(temperature: int) -> List[str]:
+def __weather_alert(temperature: int) -> Tuple[str, List[str]]:
     """
     Fornece um alerta climático com base na temperatura e umidade.
 
@@ -131,12 +131,13 @@ def __weather_alert(temperature: int) -> List[str]:
         temperature (int): Temperatura atual.
 
     Returns:
-        str: Alerta climático.
+        Tuple[str, List[str]]: Título e lista de alertas climáticos.
     """
+    title = ""
     alerts = []
 
     if temperature > 30:
-        alerts.append("Proteja-se do Sol e do Calor:")
+        title = "Proteja-se do Sol e do Calor:"
         alerts.extend([
             "Evite a exposição direta ao sol das 10h às 16h.",
             "Use protetor solar para evitar queimaduras solares e danos à pele.",
@@ -149,7 +150,7 @@ def __weather_alert(temperature: int) -> List[str]:
             "mesmo que por curto período."
         ])
     if temperature >= 25:
-        alerts.append("Hidratação é fundamental:")
+        title = "Hidratação é fundamental:"
         alerts.extend([
             "Aumente a ingestão de água ou de sucos de frutas naturais, sem adição de açúcar.",
             "Evite bebidas alcoólicas e com elevado teor de açúcar.",
@@ -158,7 +159,7 @@ def __weather_alert(temperature: int) -> List[str]:
             "Ofereça água sempre."
         ])
 
-    return alerts if alerts else ["Sem alertas no momento."]
+    return (title, alerts) if alerts else ("", [])
 
 
 def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
@@ -207,7 +208,7 @@ def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
     prediction = model.predict(model_input)[0]
     formatted_date = __get_formatted_date(data)
     condition, tip = __get_condition_tip(prediction)
-    alert = __weather_alert(data[0])  # humidity
+    title, alerts = __weather_alert(data[0])  # humidity
 
     return {
         "temperatura": prediction,
@@ -218,7 +219,10 @@ def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
         "direcao_vento": data[3],
         "condicao_climatica": condition,
         "dica": tip,
-        "alerta": alert,
+        "alerta": {
+            "titulo": title if title else "Sem alertas",
+            "conteudo": alerts,
+        },
         "data": formatted_date
     }
 
