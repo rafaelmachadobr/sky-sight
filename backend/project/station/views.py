@@ -1,19 +1,18 @@
-import numpy as np
-
-from warnings import filterwarnings
 from datetime import datetime
+from warnings import filterwarnings
 
+import numpy as np
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 
+from .models import HistoryForecast
 from .utils import get_temperature_predictions, import_model, remove_nan_samples
 
-from . import models
 filterwarnings('ignore')
+
 
 @api_view(['GET'])
 def get_historical_predict(request):
@@ -21,14 +20,17 @@ def get_historical_predict(request):
     data_atual = datetime.now().date()
     # data_atual = datetime.strptime("2024-05-14", "%Y-%m-%d").date()
 
-    dados_do_dia = models.HistoryForecast.objects.filter(dt_sensing__date=data_atual)
+    dados_do_dia = HistoryForecast.objects.filter(
+        dt_sensing__date=data_atual)
 
     if not dados_do_dia.exists():
         return Response(status=404, data={"message": "Não há dados disponíveis para o dia especificado."})
 
     # Extrair características e rótulos de todos os dados do dia
-    X = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
-    y = [[data.temperatura, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]  # Variáveis alvo
+    X = [[data.temperatura_maxima, data.temperatura_minima, data.umidade,
+          data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
+    y = [[data.temperatura, data.umidade, data.pressao, data.chuva,
+          data.velocidade_vento] for data in dados_do_dia]  # Variáveis alvo
 
     # Verificar e tratar valores ausentes nas variáveis de entrada
     X, y = remove_nan_samples(X, y)
@@ -46,7 +48,8 @@ def get_historical_predict(request):
     rf_model.fit(X, y)
 
     # Preparar os dados de previsão para o próximo dia
-    dados_previsao_proximo_dia = [[data.temperatura_maxima, data.temperatura_minima, data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
+    dados_previsao_proximo_dia = [[data.temperatura_maxima, data.temperatura_minima,
+                                   data.umidade, data.pressao, data.chuva, data.velocidade_vento] for data in dados_do_dia]
 
     # Normalizar os dados de previsão para o próximo dia
     dados_previsao_proximo_dia = scaler.transform(dados_previsao_proximo_dia)
@@ -105,4 +108,4 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     count = len(predictions)
 
-    return Response({"count": count, "results": predictions}, status=200)
+    return Response({"count": count, "previsoes": predictions}, status=200)

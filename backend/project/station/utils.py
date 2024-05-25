@@ -53,7 +53,7 @@ def __parse_forecast_data(forecast: dict) -> tuple:
     return humidity, pressure, wind_speed, wind_direction, day, month, year, hour
 
 
-def __get_weather_data(latitude: float, longitude: float) -> list:
+def __get_weather_data(latitude: float, longitude: float) -> tuple:
     """
     Obtém os dados meteorológicos para uma determinada localização.
 
@@ -62,7 +62,7 @@ def __get_weather_data(latitude: float, longitude: float) -> list:
         longitude (float): Longitude da localização.
 
     Returns:
-        list: Lista de tuplas contendo os dados meteorológicos.
+        tuple: Tupla contendo os dados meteorológicos e o nome da cidade.
     """
     url = "https://api.openweathermap.org/data/2.5/forecast"
     params = {
@@ -76,9 +76,12 @@ def __get_weather_data(latitude: float, longitude: float) -> list:
     data = response.json()
     forecast_list = data["list"]
 
+    city_name = data["city"]["name"]
+    city_country = data["city"]["country"]
+
     weather_data = [__parse_forecast_data(forecast)
                     for forecast in forecast_list]
-    return weather_data
+    return weather_data, city_name, city_country
 
 
 def import_model(model_name: str) -> object:
@@ -191,7 +194,27 @@ def __get_formatted_date(data: tuple) -> str:
     return data_time.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
+def __get_period_of_day(hour: int) -> str:
+    """
+    Retorna o período do dia baseado na hora.
+
+    Args:
+        hour (int): Hora do dia.
+
+    Returns:
+        str: Período do dia.
+    """
+
+    if 6 <= hour < 18:
+        return "d"
+
+    return "n"
+
+
+def __process_weather_data(
+        data: tuple, model, mean_pressure_inst: int, city_name: str, city_country: str,
+        latitude: float, longitude: float
+) -> dict:
     """
     Processa os dados meteorológicos e retorna as previsões de temperatura.
 
@@ -208,22 +231,36 @@ def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
     formatted_date = __get_formatted_date(data)
     condition, tip = __get_condition_tip(prediction)
     title, alerts = __weather_alert(data[0])  # humidity
+    period_of_day = __get_period_of_day(data[-1])
 
     return {
-        "temperatura_maxima": prediction_max,
-        "temperatura_minima": prediction_min,
-        "temperatura": prediction,
-        "humidade": data[0],
-        "pressao": data[1],
-        "velocidade_vento": data[2],
-        "direcao_vento": data[3],
+        "informacoes_climaticas": {
+            "temperatura_maxima": prediction_max,
+            "temperatura_minima": prediction_min,
+            "temperatura": prediction,
+            "humidade": data[0],
+            "pressao": data[1],
+        },
+        "vento": {
+            "velocidade_vento": data[2],
+            "direcao_vento": data[3]
+        },
         "condicao_climatica": condition,
         "dica": tip,
         "alerta": {
             "titulo": title if title else "Sem alertas",
             "conteudo": alerts,
         },
-        "data": formatted_date
+        "data": formatted_date,
+        "cidade": {
+            "nome": city_name,
+            "cordenadas": {
+                "latitude": latitude,
+                "longitude": longitude
+            },
+            "codigo_pais": city_country
+        },
+        "periodo_do_dia": period_of_day
     }
 
 
@@ -239,13 +276,14 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
     Returns:
         list: Lista de previsões de temperatura.
     """
-    weather_data = __get_weather_data(latitude, longitude)
+    weather_data, city_name, city_country = __get_weather_data(
+        latitude, longitude)
     mean_pressure_inst = 930
     predictions = []
 
     for data in weather_data:
         prediction_data = __process_weather_data(
-            data, model, mean_pressure_inst)
+            data, model, mean_pressure_inst, city_name, city_country, latitude, longitude)
         predictions.append(prediction_data)
 
     return predictions
