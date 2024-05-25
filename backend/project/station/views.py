@@ -103,4 +103,6 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     predictions = get_temperature_predictions(latitude, longitude, model)
 
-    return Response({"results": predictions}, status=200)
+    count = len(predictions)
+
+    return Response({"count": count, "results": predictions}, status=200)

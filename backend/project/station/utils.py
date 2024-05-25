@@ -3,7 +3,6 @@ Módulo contendo funções utilitárias para processamento de dados meteorológi
 """
 import pickle
 from datetime import datetime
-from math import floor
 from pathlib import Path
 from typing import List, Tuple
 
@@ -205,14 +204,15 @@ def __process_weather_data(data: tuple, model, mean_pressure_inst: int) -> dict:
         dict: Dicionário contendo as previsões de temperatura.
     """
     model_input = __get_model_input(data, mean_pressure_inst)
-    prediction = model.predict(model_input)[0]
+    prediction_max, prediction_min, prediction = model.predict(model_input)[0]
     formatted_date = __get_formatted_date(data)
     condition, tip = __get_condition_tip(prediction)
     title, alerts = __weather_alert(data[0])  # humidity
 
     return {
+        "temperatura_maxima": prediction_max,
+        "temperatura_minima": prediction_min,
         "temperatura": prediction,
-        "temperatura_arredondada": floor(prediction),
         "humidade": data[0],
         "pressao": data[1],
         "velocidade_vento": data[2],
