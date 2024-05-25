@@ -95,9 +95,12 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
         Response: Resposta HTTP contendo a previsão da temperatura, temperatura arredondada,
         umidade, pressão, velocidade do vento, direção do vento, condição climática, dica, 
         alerta e data.
+
+    Raises:
+        Response: Se a requisição não for do tipo GET.
     """
     if request.method != "GET":
-        return Response(status=405)
+        return Response(status=405, data={"message": "Método não permitido."})
 
     latitude = -23.587
     longitude = -46.655
@@ -108,4 +111,4 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     count = len(predictions)
 
-    return Response({"count": count, "previsoes": predictions}, status=200)
+    return Response({"quantidade": count, "previsoes": predictions}, status=200)
