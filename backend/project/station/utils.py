@@ -48,9 +48,13 @@ def __parse_forecast_data(forecast: dict) -> tuple:
     wind_speed = forecast["wind"]["speed"]
     wind_direction = forecast["wind"]["deg"]
 
+    pop = forecast["pop"]
+
+    cloudiness = forecast["clouds"]["all"]
+
     day, month, year, hour = unix_to_date(timestamp_unix)
 
-    return humidity, pressure, wind_speed, wind_direction, day, month, year, hour
+    return humidity, pressure, wind_speed, wind_direction, pop, cloudiness, day, month, year, hour
 
 
 def __get_weather_data(latitude: float, longitude: float) -> tuple:
@@ -175,7 +179,7 @@ def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
     Returns:
         list: Lista contendo a entrada do modelo.
     """
-    humidity, _, wind_speed, wind_direction, day, month, year, hour = data
+    humidity, _, wind_speed, wind_direction, _, _, day, month, year, hour = data
     return [[humidity, mean_pressure_inst, wind_speed, wind_direction, day, month, year, hour]]
 
 
@@ -189,7 +193,7 @@ def __get_formatted_date(data: tuple) -> str:
     Returns:
         str: Data e hora formatadas.
     """
-    _, _, _, _, day, month, year, hour = data
+    _, _, _, _, _, _, day, month, year, hour = data
     data_time = datetime(year, month, day, hour)
     return data_time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -243,6 +247,10 @@ def __process_weather_data(
         "vento": {
             "velocidade_vento": data[2],
             "direcao_vento": data[3]
+        },
+        "probabilidade_precipitacao": data[4],
+        "nuvens": {
+            "cobertura": data[5]
         },
         "condicao_climatica": condition,
         "dica": tip,
