@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from warnings import filterwarnings
 
 import numpy as np
@@ -15,13 +15,11 @@ filterwarnings('ignore')
 
 
 @api_view(['GET'])
-def get_historical_predict(request):
+def get_historical_predict_random_forest(request):
 
     data_atual = datetime.now().date()
-    # data_atual = datetime.strptime("2024-05-14", "%Y-%m-%d").date()
 
-    dados_do_dia = HistoryForecast.objects.filter(
-        dt_sensing__date=data_atual)
+    dados_do_dia = HistoryForecast.objects.filter(dt_sensing__date=data_atual)
 
     if not dados_do_dia.exists():
         return Response(status=404, data={"message": "Não há dados disponíveis para o dia especificado."})
@@ -57,29 +55,33 @@ def get_historical_predict(request):
     # Fazer a previsão para todos os dados do próximo dia
     previsoes_proximo_dia = rf_model.predict(dados_previsao_proximo_dia)
 
-    # Calcular a média das previsões para o próximo dia
-    previsao_media_proximo_dia = np.mean(previsoes_proximo_dia, axis=0)
-    print("Previsão média para o próximo dia:", previsao_media_proximo_dia)
+    # Calcular a média da previsão de temperatura para o próximo dia
+    previsao_temperatura_media = round(np.mean(previsoes_proximo_dia[:, 0]), 2)
 
-    # Extrair previsões individuais
-    previsao_temperatura_media = previsao_media_proximo_dia[0]
-    previsao_umidade_media = previsao_media_proximo_dia[1]
-    previsao_pressao_media = previsao_media_proximo_dia[2]
-    previsao_chuva_media = previsao_media_proximo_dia[3]
-    previsao_vento_media = previsao_media_proximo_dia[4]
+    # Calcular os valores máximos das outras variáveis
+    previsao_umidade_maxima = round(np.max(previsoes_proximo_dia[:, 1]), 2)
+    previsao_pressao_maxima = round(np.max(previsoes_proximo_dia[:, 2]), 2)
+    previsao_chuva_maxima = round(np.max(previsoes_proximo_dia[:, 3]), 2)
+    previsao_vento_maxima = round(np.max(previsoes_proximo_dia[:, 4]), 2)
 
     # Previsão para temperatura máxima e mínima
-    previsao_temperatura_maxima = np.max(previsoes_proximo_dia[:, 0])
-    previsao_temperatura_minima = np.min(previsoes_proximo_dia[:, 0])
+    previsao_temperatura_maxima = round(np.max(previsoes_proximo_dia[:, 0]), 2)
+    previsao_temperatura_minima = round(np.min(previsoes_proximo_dia[:, 0]), 2)
+
+    # Calcular a previsão de chuva máxima em percentual (1 mm = 100%)
+    previsao_chuva_maxima_percentual = round(previsao_chuva_maxima * 100, 2)
+
+    # Converter a velocidade do vento de m/s para km/h
+    previsao_vento_maxima_kmh = round(previsao_vento_maxima * 3.6, 2)
 
     return Response(status=200, data={
         "previsao_temperatura_media": previsao_temperatura_media,
         "previsao_temperatura_maxima": previsao_temperatura_maxima,
         "previsao_temperatura_minima": previsao_temperatura_minima,
-        "previsao_umidade_media": previsao_umidade_media,
-        "previsao_pressao_media": previsao_pressao_media,
-        "previsao_chuva_media": previsao_chuva_media,
-        "previsao_vento_media": previsao_vento_media,
+        "previsao_umidade_maxima": previsao_umidade_maxima,
+        "previsao_pressao_maxima": previsao_pressao_maxima,
+        "previsao_chuva_maxima_percentual": previsao_chuva_maxima_percentual,
+        "previsao_vento_maxima": previsao_vento_maxima_kmh,
     })
 
 
