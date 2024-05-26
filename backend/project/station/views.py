@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
+import numpy as np
+
+from datetime import datetime
 from warnings import filterwarnings
 
-import numpy as np
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
