@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/screens/locationError.dart';
+import 'package:sky_sight/screens/locationError.dart';
 import 'package:geolocator/geolocator.dart';
 //import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';

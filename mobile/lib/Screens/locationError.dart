@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/theme/colors.dart';
+import 'package:sky_sight/theme/colors.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 

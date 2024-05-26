@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/helper/extensions.dart';
-import 'package:flutter_weather/helper/utils.dart';
-import 'package:flutter_weather/provider/weatherProvider.dart';
-import 'package:flutter_weather/theme/textStyle.dart';
+import 'package:sky_sight/helper/extensions.dart';
+import 'package:sky_sight/helper/utils.dart';
+import 'package:sky_sight/provider/weatherProvider.dart';
+import 'package:sky_sight/theme/textStyle.dart';
 import 'package:provider/provider.dart';
 
 import 'customShimmer.dart';

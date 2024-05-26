@@ -1,13 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/helper/extensions.dart';
-import 'package:flutter_weather/theme/textStyle.dart';
-import 'package:flutter_weather/widgets/customShimmer.dart';
+import 'package:sky_sight/helper/extensions.dart';
+import 'package:sky_sight/theme/textStyle.dart';
+import 'package:sky_sight/widgets/customShimmer.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_weather/provider/weatherProvider.dart';
-import 'package:flutter_weather/theme/colors.dart';
+import 'package:sky_sight/provider/weatherProvider.dart';
+import 'package:sky_sight/theme/colors.dart';
 
 import '../helper/utils.dart';
 
