@@ -1,14 +1,14 @@
 String uviValueToString(double uvi) {
   if (uvi <= 2) {
-    return 'Low';
+    return 'Baixo';
   } else if (uvi <= 5) {
-    return 'Medium';
+    return 'Médio';
   } else if (uvi <= 7) {
-    return 'High';
+    return 'Alto';
   } else if (uvi <= 10) {
-    return 'Very High';
+    return 'Muito Alto';
   } else if (uvi >= 11) {
-    return 'Extreme';
+    return 'Extremo';
   }
   return 'Unknown';
 }

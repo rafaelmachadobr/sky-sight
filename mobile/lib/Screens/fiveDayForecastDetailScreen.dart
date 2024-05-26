@@ -11,20 +11,20 @@ import '../helper/utils.dart';
 import '../models/dailyWeather.dart';
 import '../theme/textStyle.dart';
 
-class SevenDayForecastDetail extends StatefulWidget {
-  static const routeName = '/sevenDayForecast';
+class FiveDayForecastDetail extends StatefulWidget {
+  static const routeName = '/fiveDayForecast';
   final int initialIndex;
 
-  const SevenDayForecastDetail({
+  const FiveDayForecastDetail({
     Key? key,
     this.initialIndex = 0,
   }) : super(key: key);
 
   @override
-  State<SevenDayForecastDetail> createState() => _SevenDayForecastDetailState();
+  State<FiveDayForecastDetail> createState() => _FiveDayForecastDetailState();
 }
 
-class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
+class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
   int _selectedIndex = 0;
   late final ScrollController _scrollController;
   static const double _itemWidth = 24.0;
@@ -54,7 +54,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
-          '7-Day Forecast',
+          'Previsão para 5 dias',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -91,8 +91,8 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? backgroundBlue
-                              : backgroundBlue.withOpacity(.2),
+                              ? const Color.fromARGB(255, 65, 221, 174)
+                              : const Color.fromARGB(255, 165, 212, 255).withOpacity(.2),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Row(
@@ -102,8 +102,8 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                               children: [
                                 Text(
                                   index == 0
-                                      ? 'Today'
-                                      : DateFormat('EEE').format(weather.date),
+                                      ? 'hoje'
+                                      : DateFormat('EEE', 'pt_BR').format(weather.date),
                                   style: mediumText,
                                   maxLines: 1,
                                 ),
@@ -143,8 +143,8 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                     children: [
                       Text(
                         _selectedIndex == 0
-                            ? 'Today'
-                            : DateFormat('EEEE').format(_selectedWeather.date),
+                            ? 'hoje'
+                            : DateFormat('EEEE', 'pt_BR').format(_selectedWeather.date),
                         style: mediumText,
                         maxLines: 1,
                       ),
@@ -155,8 +155,8 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                         style: boldText.copyWith(fontSize: 48.0, height: 1.15),
                       ),
                       Text(
-                        _selectedWeather.weatherCategory,
-                        style: semiboldText.copyWith(color: primaryBlue),
+                        _selectedWeather.condition,
+                        style: semiboldText.copyWith(color: const Color.fromARGB(255, 65, 221, 174)),
                       )
                     ],
                   ),
@@ -175,7 +175,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Weather Condition',
+                    'Condição Climática',
                     style: semiboldText.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 8.0),
@@ -200,7 +200,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                       ),
                       children: [
                         _ForecastDetailInfoTile(
-                          title: 'Cloudiness',
+                          title: 'Nebulosidade',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.cloud,
                             color: Colors.white,
@@ -208,15 +208,15 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                           data: '${_selectedWeather.clouds}%',
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'UV Index',
+                          title: 'Índice UV',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.sun,
                             color: Colors.white,
                           ),
-                          data: uviValueToString(_selectedWeather.uvi),
+                          data: uviValueToString(5),
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'Precipitation',
+                          title: 'Precipitação',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.drop,
                             color: Colors.white,
@@ -224,7 +224,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                           data: _selectedWeather.precipitation + '%',
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'Humidity',
+                          title: 'Umidade',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.thermometerSimple,
                             color: Colors.white,
@@ -241,7 +241,7 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Feels Like',
+                    'Dicas do dia',
                     style: semiboldText.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 8.0),
@@ -265,46 +265,47 @@ class _SevenDayForecastDetailState extends State<SevenDayForecastDetail> {
                         mainAxisSpacing: 8,
                       ),
                       children: [
-                        _ForecastDetailInfoTile(
-                          title: 'Morning Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempMorning.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempMorning.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Day Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempDay.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempDay.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Evening Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempEvening.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempEvening.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Night Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempNight.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempNight.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
+                        Text('Colocar dicas do dia aqui')
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Morning Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempMorning.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempMorning.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Day Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempDay.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempDay.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Evening Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempEvening.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempEvening.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Night Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempNight.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempNight.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
                       ],
                     ),
                   )
@@ -334,7 +335,7 @@ class _ForecastDetailInfoTile extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(backgroundColor: primaryBlue, child: icon),
+        CircleAvatar(backgroundColor: const Color.fromARGB(255, 65, 221, 174), child: icon),
         const SizedBox(width: 8.0),
         Expanded(
           child: Column(

@@ -40,7 +40,7 @@ class MainWeatherDetail extends StatelessWidget {
                           PhosphorIconsRegular.thermometerSimple,
                           color: Colors.white,
                         ),
-                        title: 'Feels Like',
+                        title: 'Sensação',
                         data: weatherProv.isCelsius
                             ? '${weatherProv.weather.feelsLike.toStringAsFixed(1)}°'
                             : '${weatherProv.weather.feelsLike.toFahrenheit().toStringAsFixed(1)}°'),
@@ -55,7 +55,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.drop,
                         color: Colors.white,
                       ),
-                      title: 'Precipitation',
+                      title: 'Precipitação',
                       data:
                           '${weatherProv.additionalWeatherData.precipitation}%',
                     ),
@@ -70,9 +70,9 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.sun,
                         color: Colors.white,
                       ),
-                      title: 'UV Index',
+                      title: 'Índice UV',
                       data: uviValueToString(
-                        weatherProv.additionalWeatherData.uvi,
+                        5,
                       ),
                     ),
                   ],
@@ -93,7 +93,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.wind,
                         color: Colors.white,
                       ),
-                      title: 'Wind',
+                      title: 'Vento',
                       data: '${weatherProv.weather.windSpeed} m/s',
                     ),
                     VerticalDivider(
@@ -107,7 +107,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.dropHalfBottom,
                         color: Colors.white,
                       ),
-                      title: 'Humidity',
+                      title: 'Umidade',
                       data: '${weatherProv.weather.humidity}%',
                     ),
                     VerticalDivider(
@@ -121,7 +121,7 @@ class MainWeatherDetail extends StatelessWidget {
                         PhosphorIconsRegular.cloud,
                         color: Colors.white,
                       ),
-                      title: 'Cloudiness',
+                      title: 'Nebulosidade',
                       data: '${weatherProv.additionalWeatherData.clouds}%',
                     ),
                   ],
@@ -152,7 +152,7 @@ class DetailInfoTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(backgroundColor: primaryBlue, child: icon),
+          CircleAvatar(backgroundColor: const Color.fromARGB(255, 65, 221, 174), child: icon),
           const SizedBox(width: 8.0),
           Expanded(
             child: Column(

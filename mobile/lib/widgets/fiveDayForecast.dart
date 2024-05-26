@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_weather/Screens/fiveDayForecastDetailScreen.dart';
 import 'package:flutter_weather/helper/extensions.dart';
 import 'package:flutter_weather/models/dailyWeather.dart';
 import 'package:flutter_weather/provider/weatherProvider.dart';
-import 'package:flutter_weather/screens/sevenDayForecastDetailScreen.dart';
 import 'package:flutter_weather/theme/colors.dart';
 import 'package:flutter_weather/theme/textStyle.dart';
 import 'package:flutter_weather/widgets/customShimmer.dart';
 import 'package:intl/intl.dart';
+//import 'package:intl/date_symbol_data_local.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/utils.dart';
 
-class SevenDayForecast extends StatelessWidget {
+class FiveDayForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,7 +26,7 @@ class SevenDayForecast extends StatelessWidget {
               PhosphorIcon(PhosphorIconsRegular.calendar),
               const SizedBox(width: 4.0),
               Text(
-                '7-Day Forecast',
+                'Previsão para 5 dias',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -39,14 +40,14 @@ class SevenDayForecast extends StatelessWidget {
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
                       textStyle: mediumText.copyWith(fontSize: 14.0),
-                      foregroundColor: primaryBlue,
+                      foregroundColor: const Color.fromARGB(255, 65, 221, 174),
                     ),
-                    child: Text('more details ▶'),
+                    child: Text('mais detalhes ➤'),
                     onPressed: weatherProv.isLoading
                         ? null
                         : () {
                             Navigator.of(context)
-                                .pushNamed(SevenDayForecastDetail.routeName);
+                                .pushNamed(FiveDayForecastDetail.routeName);
                           },
                   );
                 },
@@ -83,7 +84,7 @@ class SevenDayForecast extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12.0),
                       onTap: () {
                         Navigator.of(context).pushNamed(
-                          SevenDayForecastDetail.routeName,
+                          FiveDayForecastDetail.routeName,
                           arguments: index,
                         );
                       },
@@ -99,9 +100,9 @@ class SevenDayForecast extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   index == 0
-                                      ? 'Today'
-                                      : DateFormat('EEEE').format(weather.date),
-                                  style: semiboldText,
+                                      ? 'Hoje'
+                                      : DateFormat('EEEE', 'pt_BR').format(weather.date),
+                                  style: mediumText,
                                   maxLines: 1,
                                 ),
                               ),
@@ -119,7 +120,7 @@ class SevenDayForecast extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4.0),
                                 Text(
-                                  weather.weatherCategory,
+                                  weather.condition,
                                   style: lightText,
                                 ),
                               ],

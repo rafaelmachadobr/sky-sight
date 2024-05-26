@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import './provider/weatherProvider.dart';
 import 'screens/homeScreen.dart';
-import 'screens/sevenDayForecastDetailScreen.dart';
+import 'Screens/fiveDayForecastDetailScreen.dart';
+//import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  await initializeDateFormatting('pt_BR', null);
+  await dotenv.load(fileName: ".env");
   runApp(
     MyApp(),
   );
@@ -38,10 +43,10 @@ class MyApp extends StatelessWidget {
         // },
         onGenerateRoute: (settings) {
           final arguments = settings.arguments;
-          if (settings.name == SevenDayForecastDetail.routeName) {
+          if (settings.name == FiveDayForecastDetail.routeName) {
             return PageRouteBuilder(
               settings: settings,
-              pageBuilder: (_, __, ___) => SevenDayForecastDetail(
+              pageBuilder: (_, __, ___) => FiveDayForecastDetail(
                 initialIndex: arguments == null ? 0 : arguments as int,
               ),
               transitionsBuilder: (ctx, a, b, c) => CupertinoPageTransition(
@@ -52,7 +57,7 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-          // Unknown route
+          //Unknown route
           return MaterialPageRoute(builder: (_) => HomeScreen());
         },
       ),
