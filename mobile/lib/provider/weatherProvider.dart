@@ -129,7 +129,7 @@ class WeatherProvider with ChangeNotifier {
 
         // Filtrando previsões para hoje em intervalos de 3 horas
       DateTime now = DateTime.now();
-      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59).add(Duration(days: 1));;
+      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59).add(Duration(days: 4));;
       hourlyWeather = hourlyList
           .map((item) => HourlyWeather.fromJson(item))
           .where((item) => item.date.isAfter(now) && item.date.isBefore(endOfDay))
