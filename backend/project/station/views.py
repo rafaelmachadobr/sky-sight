@@ -109,6 +109,23 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     predictions = get_temperature_predictions(latitude, longitude, model)
 
+    city_name = "Ibirapuera"
+    city_country = "BR"
+
+    city = {
+        "nome": city_name,
+        "coordenadas": {
+            "latitude": latitude,
+            "longitude": longitude
+        },
+        "codigo_pais": city_country
+    }
+
     count = len(predictions)
 
-    return Response({"quantidade": count, "previsoes": predictions}, status=200)
+    return Response({
+        "codigo": 200,
+        "quantidade": count, 
+        "previsoes": predictions, 
+        "cidade": city
+    }, status=200)

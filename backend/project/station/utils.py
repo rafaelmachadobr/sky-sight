@@ -76,15 +76,12 @@ def __get_weather_data(latitude: float, longitude: float) -> tuple:
     data = response.json()
     forecast_list = data["list"]
 
-    city_name = data["city"]["name"]
-    city_country = data["city"]["country"]
-
     weather = forecast_list[0]["weather"][0]["main"]
     weather_description = forecast_list[0]["weather"][0]["description"]
 
     weather_data = [__parse_forecast_data(forecast)
                     for forecast in forecast_list]
-    return weather_data, city_name, city_country, weather, weather_description
+    return weather_data, weather, weather_description
 
 
 def import_model(model_name: str) -> object:
@@ -215,9 +212,7 @@ def __get_period_of_day(hour: int) -> str:
 
 
 def __process_weather_data(
-        data: tuple, model, mean_pressure_inst: int, city_name: str,
-        city_country: str, weather: str, weather_description: str,
-        latitude: float, longitude: float
+        data: tuple, model, mean_pressure_inst: int, weather: str, weather_description: str
 ) -> dict:
     """
     Processa os dados meteorológicos e retorna as previsões de temperatura.
@@ -256,14 +251,6 @@ def __process_weather_data(
             "conteudo": alerts,
         },
         "data": formatted_date,
-        "cidade": {
-            "nome": city_name,
-            "cordenadas": {
-                "latitude": latitude,
-                "longitude": longitude
-            },
-            "codigo_pais": city_country
-        },
         "clima": {
             "condicao": weather,
             "descricao": weather_description
@@ -284,14 +271,14 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
     Returns:
         list: Lista de previsões de temperatura.
     """
-    weather_data, city_name, city_country, weather, weather_description = __get_weather_data(
+    weather_data, weather, weather_description = __get_weather_data(
         latitude, longitude)
     mean_pressure_inst = 930
     predictions = []
 
     for data in weather_data:
         prediction_data = __process_weather_data(
-            data, model, mean_pressure_inst, city_name, city_country, weather, weather_description, latitude, longitude)
+            data, model, mean_pressure_inst, weather, weather_description)
         predictions.append(prediction_data)
 
     return predictions
