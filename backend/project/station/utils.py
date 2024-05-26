@@ -241,7 +241,7 @@ def __process_weather_data(
             "temperatura_maxima": prediction_max,
             "temperatura_minima": prediction_min,
             "temperatura": prediction,
-            "humidade": data[0],
+            "umidade": data[0],
             "pressao": data[1],
         },
         "vento": {
