@@ -6,8 +6,11 @@ import 'package:provider/provider.dart';
 import './provider/weatherProvider.dart';
 import 'screens/homeScreen.dart';
 import 'Screens/fiveDayForecastDetailScreen.dart';
+//import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
+  await initializeDateFormatting('pt_BR', null);
   await dotenv.load(fileName: ".env");
   runApp(
     MyApp(),

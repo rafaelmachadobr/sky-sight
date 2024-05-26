@@ -152,7 +152,7 @@ class DetailInfoTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(backgroundColor: primaryBlue, child: icon),
+          CircleAvatar(backgroundColor: const Color.fromARGB(255, 65, 221, 174), child: icon),
           const SizedBox(width: 8.0),
           Expanded(
             child: Column(

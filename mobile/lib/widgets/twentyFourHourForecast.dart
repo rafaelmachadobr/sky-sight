@@ -102,7 +102,7 @@ class HourlyWeatherWidget extends StatelessWidget {
             children: [
               Divider(
                 thickness: 2.0,
-                color: primaryBlue,
+                color: const Color.fromARGB(255, 65, 221, 174),
               ),
               // if (index == 0)
               //   Positioned(

@@ -1,7 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/provider/weatherProvider.dart';
-import 'package:flutter_weather/theme/colors.dart';
+//import 'package:flutter_weather/theme/colors.dart';
 import 'package:flutter_weather/theme/textStyle.dart';
 import 'package:flutter_weather/widgets/customShimmer.dart';
 import 'package:intl/intl.dart';
@@ -48,7 +48,7 @@ class WeatherInfoHeader extends StatelessWidget {
                         const SizedBox(height: 4.0),
                         FittedBox(
                           child: Text(
-                            DateFormat('EEEE MMM dd, y  hh:mm a')
+                            DateFormat('EEEE MMM dd, y  hh:mm a', 'pt_BR')
                                 .format(DateTime.now()),
                             style: regularText.copyWith(
                                 color: Colors.grey.shade700),
@@ -92,7 +92,7 @@ class WeatherInfoHeader extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: weatherProv.isLoading
                                           ? Colors.grey
-                                          : primaryBlue,
+                                          : const Color.fromARGB(255, 0, 195, 255),
                                     ),
                                   ),
                                   Container(
@@ -131,7 +131,7 @@ class WeatherInfoHeader extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: weatherProv.isLoading
                                           ? Colors.grey
-                                          : primaryBlue,
+                                          : const Color.fromARGB(255, 0, 195, 255),
                                     ),
                                   ),
                                 ],

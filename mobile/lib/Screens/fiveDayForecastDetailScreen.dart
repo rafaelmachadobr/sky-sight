@@ -91,8 +91,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? backgroundBlue
-                              : backgroundBlue.withOpacity(.2),
+                              ? const Color.fromARGB(255, 65, 221, 174)
+                              : const Color.fromARGB(255, 165, 212, 255).withOpacity(.2),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Row(
@@ -102,8 +102,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                               children: [
                                 Text(
                                   index == 0
-                                      ? 'Today'
-                                      : DateFormat('EEE').format(weather.date),
+                                      ? 'hoje'
+                                      : DateFormat('EEE', 'pt_BR').format(weather.date),
                                   style: mediumText,
                                   maxLines: 1,
                                 ),
@@ -143,8 +143,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                     children: [
                       Text(
                         _selectedIndex == 0
-                            ? 'Today'
-                            : DateFormat('EEEE').format(_selectedWeather.date),
+                            ? 'hoje'
+                            : DateFormat('EEEE', 'pt_BR').format(_selectedWeather.date),
                         style: mediumText,
                         maxLines: 1,
                       ),
@@ -155,8 +155,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         style: boldText.copyWith(fontSize: 48.0, height: 1.15),
                       ),
                       Text(
-                        _selectedWeather.weatherCategory,
-                        style: semiboldText.copyWith(color: primaryBlue),
+                        _selectedWeather.condition,
+                        style: semiboldText.copyWith(color: const Color.fromARGB(255, 65, 221, 174)),
                       )
                     ],
                   ),
@@ -175,7 +175,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Weather Condition',
+                    'Condição Climática',
                     style: semiboldText.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 8.0),
@@ -200,7 +200,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                       ),
                       children: [
                         _ForecastDetailInfoTile(
-                          title: 'Cloudiness',
+                          title: 'Nebulosidade',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.cloud,
                             color: Colors.white,
@@ -208,7 +208,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                           data: '${_selectedWeather.clouds}%',
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'UV Index',
+                          title: 'Índice UV',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.sun,
                             color: Colors.white,
@@ -216,7 +216,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                           data: uviValueToString(5),
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'Precipitation',
+                          title: 'Precipitação',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.drop,
                             color: Colors.white,
@@ -224,7 +224,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                           data: _selectedWeather.precipitation + '%',
                         ),
                         _ForecastDetailInfoTile(
-                          title: 'Humidity',
+                          title: 'Umidade',
                           icon: PhosphorIcon(
                             PhosphorIconsRegular.thermometerSimple,
                             color: Colors.white,
@@ -241,7 +241,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Feels Like',
+                    'Dicas do dia',
                     style: semiboldText.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 8.0),
@@ -265,46 +265,47 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         mainAxisSpacing: 8,
                       ),
                       children: [
-                        _ForecastDetailInfoTile(
-                          title: 'Morning Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempMorning.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempMorning.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Day Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempDay.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempDay.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Evening Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempEvening.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempEvening.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
-                        _ForecastDetailInfoTile(
-                          title: 'Night Temp',
-                          icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
-                            color: Colors.white,
-                          ),
-                          data: weatherProv.isCelsius
-                              ? '${_selectedWeather.tempNight.toStringAsFixed(1)}°'
-                              : '${_selectedWeather.tempNight.toFahrenheit().toStringAsFixed(1)}°',
-                        ),
+                        Text('Colocar dicas do dia aqui')
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Morning Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempMorning.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempMorning.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Day Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempDay.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempDay.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Evening Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempEvening.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempEvening.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Night Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempNight.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempNight.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
                       ],
                     ),
                   )
@@ -334,7 +335,7 @@ class _ForecastDetailInfoTile extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(backgroundColor: primaryBlue, child: icon),
+        CircleAvatar(backgroundColor: const Color.fromARGB(255, 65, 221, 174), child: icon),
         const SizedBox(width: 8.0),
         Expanded(
           child: Column(

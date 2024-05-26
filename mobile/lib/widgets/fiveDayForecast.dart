@@ -7,6 +7,7 @@ import 'package:flutter_weather/theme/colors.dart';
 import 'package:flutter_weather/theme/textStyle.dart';
 import 'package:flutter_weather/widgets/customShimmer.dart';
 import 'package:intl/intl.dart';
+//import 'package:intl/date_symbol_data_local.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -39,9 +40,9 @@ class FiveDayForecast extends StatelessWidget {
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
                       textStyle: mediumText.copyWith(fontSize: 14.0),
-                      foregroundColor: primaryBlue,
+                      foregroundColor: const Color.fromARGB(255, 65, 221, 174),
                     ),
-                    child: Text('mais detalhes ▶'),
+                    child: Text('mais detalhes ➤'),
                     onPressed: weatherProv.isLoading
                         ? null
                         : () {
@@ -100,8 +101,8 @@ class FiveDayForecast extends StatelessWidget {
                                 child: Text(
                                   index == 0
                                       ? 'Hoje'
-                                      : DateFormat('EEEE').format(weather.date),
-                                  style: semiboldText,
+                                      : DateFormat('EEEE', 'pt_BR').format(weather.date),
+                                  style: mediumText,
                                   maxLines: 1,
                                 ),
                               ),
@@ -119,7 +120,7 @@ class FiveDayForecast extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4.0),
                                 Text(
-                                  weather.weatherCategory,
+                                  weather.condition,
                                   style: lightText,
                                 ),
                               ],
