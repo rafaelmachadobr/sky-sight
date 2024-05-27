@@ -48,13 +48,19 @@ def __parse_forecast_data(forecast: dict) -> tuple:
     wind_speed = forecast["wind"]["speed"]
     wind_direction = forecast["wind"]["deg"]
 
+    weather = forecast["weather"][0]["main"]
+    weather_description = forecast["weather"][0]["description"]
+
     pop = forecast["pop"]
 
     cloudiness = forecast["clouds"]["all"]
 
     day, month, year, hour = unix_to_date(timestamp_unix)
 
-    return humidity, pressure, wind_speed, wind_direction, pop, cloudiness, timestamp_unix, day, month, year, hour
+    return (
+        humidity, pressure, wind_speed, wind_direction, 
+        pop, cloudiness, weather, weather_description, timestamp_unix, day, month, year, hour
+    )
 
 
 def __get_weather_data(latitude: float, longitude: float) -> tuple:
@@ -80,12 +86,7 @@ def __get_weather_data(latitude: float, longitude: float) -> tuple:
     data = response.json()
     forecast_list = data["list"]
 
-    weather = forecast_list[0]["weather"][0]["main"]
-    weather_description = forecast_list[0]["weather"][0]["description"]
-
-    weather_data = [__parse_forecast_data(forecast)
-                    for forecast in forecast_list]
-    return weather_data, weather, weather_description
+    return [__parse_forecast_data(forecast) for forecast in forecast_list]
 
 
 def import_model(model_name: str) -> object:
@@ -179,7 +180,7 @@ def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
     Returns:
         list: Lista contendo a entrada do modelo.
     """
-    humidity, _, wind_speed, wind_direction, _, _, _, day, month, year, hour = data
+    humidity, _, wind_speed, wind_direction, _, _, _, _, _, day, month, year, hour = data
     return [[humidity, mean_pressure_inst, wind_speed, wind_direction, day, month, year, hour]]
 
 
@@ -193,7 +194,7 @@ def __get_formatted_date(data: tuple) -> str:
     Returns:
         str: Data e hora formatadas.
     """
-    _, _, _, _, _, _, _, day, month, year, hour = data
+    _, _, _, _, _, _, _, _, _, day, month, year, hour = data
     data_time = datetime(year, month, day, hour)
     return data_time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -209,14 +210,11 @@ def __get_period_of_day(hour: int) -> str:
         str: Período do dia.
     """
 
-    if 6 <= hour < 18:
-        return "d"
-
-    return "n"
+    return "d" if 6 <= hour < 18 else "n"
 
 
 def __process_weather_data(
-        data: tuple, model, mean_pressure_inst: int, weather: str, weather_description: str
+        data: tuple, model, mean_pressure_inst: int
 ) -> dict:
     """
     Processa os dados meteorológicos e retorna as previsões de temperatura.
@@ -261,8 +259,8 @@ def __process_weather_data(
         },
         "dt_txt": formatted_date,
         "weather": [{
-            "main": weather,
-            "description": weather_description
+            "main": data[6],
+            "description": data[7]
         }],
         "sys": {
             "pod": period_of_day
@@ -282,14 +280,14 @@ def get_temperature_predictions(latitude: float, longitude: float, model: object
     Returns:
         list: Lista de previsões de temperatura.
     """
-    weather_data, weather, weather_description = __get_weather_data(
+    weather_data = __get_weather_data(
         latitude, longitude)
     mean_pressure_inst = 930
     predictions = []
 
     for data in weather_data:
         prediction_data = __process_weather_data(
-            data, model, mean_pressure_inst, weather, weather_description)
+            data, model, mean_pressure_inst)
         predictions.append(prediction_data)
 
     return predictions
