@@ -100,7 +100,7 @@ class FiveDayForecast extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   index == 0
-                                      ? 'Hoje'
+                                      ? 'hoje'
                                       : DateFormat('EEEE', 'pt_BR').format(weather.date),
                                   style: mediumText,
                                   maxLines: 1,

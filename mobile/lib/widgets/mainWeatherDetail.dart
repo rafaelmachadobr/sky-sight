@@ -42,8 +42,8 @@ class MainWeatherDetail extends StatelessWidget {
                         ),
                         title: 'Sensação',
                         data: weatherProv.isCelsius
-                            ? '${weatherProv.weather.feelsLike.toStringAsFixed(1)}°'
-                            : '${weatherProv.weather.feelsLike.toFahrenheit().toStringAsFixed(1)}°'),
+                            ? '${weatherProv.weather.temp.toStringAsFixed(1)}°'
+                            : '${weatherProv.weather.temp.toFahrenheit().toStringAsFixed(1)}°'),
                     VerticalDivider(
                       thickness: 1.0,
                       indent: 4.0,

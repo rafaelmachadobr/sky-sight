@@ -117,7 +117,8 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
 
     Uri dailyUrl = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/forecast?lat=-23.587405&lon=-46.65773&lang=pt_br&appid=$apiKey&units=metric',
+      //'https://api.openweathermap.org/data/2.5/forecast?lat=-23.587405&lon=-46.65773&lang=pt_br&appid=$apiKey&units=metric',
+      'http://skysight.eastus.cloudapp.azure.com:8000/api/historical/predict/linear-regression/ibirapuera-park/?format=json',
     );
     try {
       final response = await http.get(dailyUrl);

@@ -260,12 +260,14 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                       shrinkWrap: true,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         childAspectRatio: 16 / 4,
-                        crossAxisCount: 2,
+                        crossAxisCount: 1,
                         crossAxisSpacing: 4,
                         mainAxisSpacing: 8,
                       ),
                       children: [
-                        Text('Colocar dicas do dia aqui')
+                        Text(
+                        _selectedWeather.tip + ' '+ _selectedWeather.alert
+                        ),
                         // _ForecastDetailInfoTile(
                         //   title: 'Morning Temp',
                         //   icon: PhosphorIcon(
