@@ -42,7 +42,7 @@ class FiveDayForecast extends StatelessWidget {
                       textStyle: mediumText.copyWith(fontSize: 14.0),
                       foregroundColor: const Color.fromARGB(255, 65, 221, 174),
                     ),
-                    child: Text('mais detalhes ➤'),
+                    child: Text('Mais detalhes ➤'),
                     onPressed: weatherProv.isLoading
                         ? null
                         : () {
@@ -100,8 +100,8 @@ class FiveDayForecast extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   index == 0
-                                      ? 'hoje'
-                                      : DateFormat('EEEE', 'pt_BR').format(weather.date),
+                                      ? 'Hoje'
+                                      : DateFormat('EEEE', 'pt_BR').format(weather.date).toCapitalized(),
                                   style: mediumText,
                                   maxLines: 1,
                                 ),
@@ -120,7 +120,7 @@ class FiveDayForecast extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4.0),
                                 Text(
-                                  weather.condition,
+                                  weather.condition.toCapitalized(),
                                   style: lightText,
                                 ),
                               ],

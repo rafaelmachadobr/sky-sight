@@ -1,5 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:sky_sight/helper/extensions.dart';
 import 'package:sky_sight/provider/weatherProvider.dart';
 //import 'package:flutter_weather/theme/colors.dart';
 import 'package:sky_sight/theme/textStyle.dart';
@@ -32,13 +33,13 @@ class WeatherInfoHeader extends StatelessWidget {
                           child: RichText(
                             textAlign: TextAlign.start,
                             text: TextSpan(
-                              text: weatherProv.weather.city + ', ',
+                              text: weatherProv.weather.city.toCapitalized() + ', ',
                               style: semiboldText,
                               children: [
                                 TextSpan(
                                   text: Country.tryParse(
-                                          weatherProv.weather.countryCode)
-                                      ?.name,
+                                          weatherProv.weather.countryCode.toCapitalized())
+                                      ?.name.toCapitalized(),
                                   style: regularText.copyWith(fontSize: 18.0),
                                 ),
                               ],
@@ -48,8 +49,9 @@ class WeatherInfoHeader extends StatelessWidget {
                         const SizedBox(height: 4.0),
                         FittedBox(
                           child: Text(
-                            DateFormat('EEEE MMM dd, y  hh:mm a', 'pt_BR')
-                                .format(DateTime.now()),
+                            DateFormat('EEEE, dd MMM y HH:mm', 'pt_BR')
+                                .format(DateTime.now())
+                                .toCapitalized(),
                             style: regularText.copyWith(
                                 color: Colors.grey.shade700),
                           ),

@@ -102,8 +102,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                               children: [
                                 Text(
                                   index == 0
-                                      ? 'hoje'
-                                      : DateFormat('EEE', 'pt_BR').format(weather.date),
+                                      ? 'Hoje'
+                                      : DateFormat('EEE', 'pt_BR').format(weather.date).toCapitalized(),
                                   style: mediumText,
                                   maxLines: 1,
                                 ),
@@ -143,8 +143,8 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                     children: [
                       Text(
                         _selectedIndex == 0
-                            ? 'hoje'
-                            : DateFormat('EEEE', 'pt_BR').format(_selectedWeather.date),
+                            ? 'Hoje'
+                            : DateFormat('EEEE', 'pt_BR').format(_selectedWeather.date).toCapitalized(),
                         style: mediumText,
                         maxLines: 1,
                       ),
@@ -155,7 +155,7 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         style: boldText.copyWith(fontSize: 48.0, height: 1.15),
                       ),
                       Text(
-                        _selectedWeather.condition,
+                        _selectedWeather.condition.toCapitalized(),
                         style: semiboldText.copyWith(color: const Color.fromARGB(255, 65, 221, 174)),
                       )
                     ],
