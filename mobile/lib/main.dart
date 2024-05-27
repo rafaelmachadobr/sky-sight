@@ -8,13 +8,50 @@ import 'screens/homeScreen.dart';
 import 'Screens/fiveDayForecastDetailScreen.dart';
 //import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pt_BR', null);
   await dotenv.load(fileName: ".env");
+
+  // Inicialize as configurações de notificações
+  var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid);
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  scheduleHourlyNotification();
+
   runApp(
     MyApp(),
   );
+}
+
+void scheduleHourlyNotification() async {
+  var androidDetails = AndroidNotificationDetails(
+    'channelId', // Identificador único do canal
+    'channelName', // Nome do canal
+    channelDescription: 'Este canal é usado para notificações periódicas.', // Descrição do canal
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+  var generalNotificationDetails = NotificationDetails(
+      android: androidDetails);
+
+  await flutterLocalNotificationsPlugin.periodicallyShow(
+    0,
+    'ALERTA DO TEMPO',
+    'VAI TER TEMPESTADE CORRE',
+    RepeatInterval.everyMinute,
+    generalNotificationDetails,
+    androidAllowWhileIdle: true,
+  );
+
+   print('Notificação agendada');
 }
 
 class MyApp extends StatelessWidget {

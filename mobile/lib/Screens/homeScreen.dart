@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sky_sight/screens/locationError.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:sky_sight/screens/locationError.dart';
+//import 'package:geolocator/geolocator.dart';
 //import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -61,14 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<WeatherProvider>(
         builder: (context, weatherProv, _) {
-          if (!weatherProv.isLoading && !weatherProv.isLocationserviceEnabled)
-            return LocationServiceErrorDisplay();
+          // if (!weatherProv.isLoading && !weatherProv.isLocationserviceEnabled)
+          //   return LocationServiceErrorDisplay();
 
-          if (!weatherProv.isLoading &&
-              weatherProv.locationPermission != LocationPermission.always &&
-              weatherProv.locationPermission != LocationPermission.whileInUse) {
-            return LocationPermissionErrorDisplay();
-          }
+          // if (!weatherProv.isLoading &&
+          //     weatherProv.locationPermission != LocationPermission.always &&
+          //     weatherProv.locationPermission != LocationPermission.whileInUse) {
+          //   return LocationPermissionErrorDisplay();
+          // }
 
           if (weatherProv.isRequestError) return RequestErrorDisplay();
 

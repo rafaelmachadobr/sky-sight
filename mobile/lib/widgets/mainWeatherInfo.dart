@@ -71,8 +71,8 @@ class MainWeatherInfo extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 148.0,
-              width: 148.0,
+              height: 128.0,
+              width: 128.0,
               child: Image.asset(
                 getWeatherImage(weatherProv.weather.weatherCategory),
                 fit: BoxFit.cover,
