@@ -136,7 +136,7 @@ class HourlyWeatherWidget extends StatelessWidget {
           ),
           const SizedBox(height: 2.0),
           Text(
-            /*index == 0 ? 'Agora' : */DateFormat('hh:mm a').format(data.date),
+            /*index == 0 ? 'Agora' : */DateFormat('HH:mm').format(data.date),
             style: regularText,
           )
         ],
