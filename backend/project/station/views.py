@@ -1,8 +1,7 @@
-import numpy as np
-
 from datetime import datetime
 from warnings import filterwarnings
 
+import numpy as np
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -10,7 +9,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 
 from .models import HistoryForecast
-from .utils import get_temperature_predictions, import_model, remove_nan_samples
+from .utils import (get_temperature_predictions, import_model,
+                    remove_nan_samples)
 
 filterwarnings('ignore')
 
@@ -126,9 +126,11 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
 
     count = len(predictions)
 
-    return Response({
+    response_data = {
         "cod": 200,
         "cnt": count,
         "list": predictions, 
         "city": city
-    }, status=200)
+    }
+
+    return Response(response_data, status=200, content_type='application/json; charset=UTF-8')
