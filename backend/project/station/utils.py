@@ -54,7 +54,7 @@ def __parse_forecast_data(forecast: dict) -> tuple:
 
     day, month, year, hour = unix_to_date(timestamp_unix)
 
-    return humidity, pressure, wind_speed, wind_direction, pop, cloudiness, day, month, year, hour
+    return humidity, pressure, wind_speed, wind_direction, pop, cloudiness, timestamp_unix, day, month, year, hour
 
 
 def __get_weather_data(latitude: float, longitude: float) -> tuple:
@@ -179,7 +179,7 @@ def __get_model_input(data: tuple, mean_pressure_inst: int) -> list:
     Returns:
         list: Lista contendo a entrada do modelo.
     """
-    humidity, _, wind_speed, wind_direction, _, _, day, month, year, hour = data
+    humidity, _, wind_speed, wind_direction, _, _, _, day, month, year, hour = data
     return [[humidity, mean_pressure_inst, wind_speed, wind_direction, day, month, year, hour]]
 
 
@@ -193,7 +193,7 @@ def __get_formatted_date(data: tuple) -> str:
     Returns:
         str: Data e hora formatadas.
     """
-    _, _, _, _, _, _, day, month, year, hour = data
+    _, _, _, _, _, _, _, day, month, year, hour = data
     data_time = datetime(year, month, day, hour)
     return data_time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -233,37 +233,40 @@ def __process_weather_data(
     prediction_max, prediction_min, prediction = model.predict(model_input)[0]
     formatted_date = __get_formatted_date(data)
     condition, tip = __get_condition_tip(prediction)
-    title, alerts = __weather_alert(data[0])  # humidity
+    title, alerts = __weather_alert(data[0])
     period_of_day = __get_period_of_day(data[-1])
 
     return {
-        "informacoes_climaticas": {
-            "temperatura_maxima": prediction_max,
-            "temperatura_minima": prediction_min,
-            "temperatura": prediction,
-            "umidade": data[0],
-            "pressao": data[1],
+        "dt": data[6],
+        "main": {
+            "temp": prediction,
+            "temp_max": prediction_max,
+            "temperatura_min": prediction_min,
+            "humidity": data[0],
+            "pressure": data[1],
         },
-        "vento": {
-            "velocidade_vento": data[2],
-            "direcao_vento": data[3]
+        "wind": {
+            "speed": data[2],
+            "deg": data[3]
         },
-        "probabilidade_precipitacao": data[4],
-        "nuvens": {
-            "cobertura": data[5]
+        "pop": data[4],
+        "clouds": {
+            "all": data[5]
         },
-        "condicao_climatica": condition,
-        "dica": tip,
-        "alerta": {
-            "titulo": title if title else "Sem alertas",
-            "conteudo": alerts,
+        "condition": condition,
+        "tip": tip,
+        "alert": {
+            "title": title or "Sem alertas",
+            "content": alerts
         },
-        "data": formatted_date,
-        "clima": {
-            "condicao": weather,
-            "descricao": weather_description
-        },
-        "periodo_do_dia": period_of_day
+        "dt_txt": formatted_date,
+        "weather": [{
+            "main": weather,
+            "description": weather_description
+        }],
+        "sys": {
+            "pod": period_of_day
+        }
     }
 
 

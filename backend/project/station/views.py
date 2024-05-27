@@ -116,19 +116,19 @@ def get_historical_predict_linear_regression_ibirapuera_park(request: Request) -
     city_country = "BR"
 
     city = {
-        "nome": city_name,
-        "coordenadas": {
-            "latitude": latitude,
-            "longitude": longitude
+        "name": city_name,
+        "coord": {
+            "lat": latitude,
+            "lon": longitude
         },
-        "codigo_pais": city_country
+        "country": city_country
     }
 
     count = len(predictions)
 
     return Response({
-        "codigo": 200,
-        "quantidade": count, 
-        "previsoes": predictions, 
-        "cidade": city
+        "cod": 200,
+        "cnt": count,
+        "list": predictions, 
+        "city": city
     }, status=200)
