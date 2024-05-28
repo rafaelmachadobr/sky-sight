@@ -226,10 +226,26 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         _ForecastDetailInfoTile(
                           title: 'Umidade',
                           icon: PhosphorIcon(
-                            PhosphorIconsRegular.thermometerSimple,
+                            PhosphorIconsRegular.dropHalfBottom,
                             color: Colors.white,
                           ),
                           data: '${_selectedWeather.humidity}%',
+                        ),
+                        _ForecastDetailInfoTile(
+                          title: 'Vento',
+                          icon: PhosphorIcon(
+                            PhosphorIconsRegular.wind,
+                            color: Colors.white,
+                          ),
+                          data: '${_selectedWeather.wind} m/s',
+                        ),
+                        _ForecastDetailInfoTile(
+                          title: 'Pressão',
+                          icon: PhosphorIcon(
+                            PhosphorIconsRegular.gauge,
+                            color: Colors.white,
+                          ),
+                          data: '${_selectedWeather.pressure} mbar',
                         ),
                       ],
                     ),
@@ -265,8 +281,85 @@ class _FiveDayForecastDetailState extends State<FiveDayForecastDetail> {
                         mainAxisSpacing: 8,
                       ),
                       children: [
-                        Text(
-                        _selectedWeather.tip + ' '+ _selectedWeather.alert
+                        Text('Inspeção de Árvores e Estruturas \nRemoção de Objetos Soltos \nEquipe de Resposta de Emergência! \nProcure Abrigo Adequado \nEvite Áreas Abertas'
+                        //_selectedWeather.tip + ' '+ _selectedWeather.alert
+                        ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Morning Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempMorning.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempMorning.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Day Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempDay.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempDay.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Evening Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempEvening.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempEvening.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                        // _ForecastDetailInfoTile(
+                        //   title: 'Night Temp',
+                        //   icon: PhosphorIcon(
+                        //     PhosphorIconsRegular.thermometerSimple,
+                        //     color: Colors.white,
+                        //   ),
+                        //   data: weatherProv.isCelsius
+                        //       ? '${_selectedWeather.tempNight.toStringAsFixed(1)}°'
+                        //       : '${_selectedWeather.tempNight.toFahrenheit().toStringAsFixed(1)}°',
+                        // ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Alerta',
+                    style: semiboldText.copyWith(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 12.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: backgroundWhite,
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: GridView(
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 16 / 4,
+                        crossAxisCount: 1,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 8,
+                      ),
+                      children: [
+                        Text('Chuva forte prevista! Precipitação superior a 70%.'
+                        //_selectedWeather.tip + ' '+ _selectedWeather.alert
                         ),
                         // _ForecastDetailInfoTile(
                         //   title: 'Morning Temp',

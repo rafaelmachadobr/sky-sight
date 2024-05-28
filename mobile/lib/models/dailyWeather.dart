@@ -17,6 +17,8 @@ class DailyWeather with ChangeNotifier {
   final int humidity;
   final String tip;
   final String alert;
+  final double wind;
+  final int pressure;
 
   DailyWeather({
     required this.temp,
@@ -33,7 +35,9 @@ class DailyWeather with ChangeNotifier {
     required this.clouds,
     required this.humidity,
     required this.tip,
-    required this.alert
+    required this.alert,
+    required this.wind,
+    required this.pressure
   });
 
   // DailyWeather.fromDailyJson(Map<String, dynamic> json) {
@@ -62,6 +66,8 @@ class DailyWeather with ChangeNotifier {
     DateTime date = DateTime.parse(json[0]['dt_txt']);
     String tip = json[0]['tip'];
     String alert = json[0]['alert']['title'];
+    double wind = json[0]['wind']['speed'];
+    int pressure = json[0]['main']['pressure'];
 
 
     for (var item in json) {
@@ -108,6 +114,8 @@ class DailyWeather with ChangeNotifier {
       humidity: (humiditySum / count).round(),
       tip : tip,
       alert : alert,
+      wind : wind,
+      pressure: pressure,
     );
   }
 

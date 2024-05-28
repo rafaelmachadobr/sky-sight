@@ -9,6 +9,7 @@ import 'Screens/fiveDayForecastDetailScreen.dart';
 //import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../models/dailyWeather.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -17,6 +18,12 @@ void main() async {
   await initializeDateFormatting('pt_BR', null);
   await dotenv.load(fileName: ".env");
 
+  WeatherProvider _weatherProvider = WeatherProvider();
+
+  String alertDescription = _weatherProvider.dailyWeather.isNotEmpty 
+    ? _weatherProvider.dailyWeather[0].alert 
+    : 'Chuva forte prevista! Precipitação superior a 70%.';
+
   // Inicialize as configurações de notificações
   var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
   var initializationSettings = InitializationSettings(
@@ -24,14 +31,18 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-  scheduleHourlyNotification();
+  scheduleHourlyNotification(alertDescription);
 
   runApp(
-    MyApp(),
+    ChangeNotifierProvider.value( // Use ChangeNotifierProvider.value para passar uma instância existente
+      value: _weatherProvider,
+      child: MyApp(),
+    ),
   );
 }
 
-void scheduleHourlyNotification() async {
+void scheduleHourlyNotification(String alertDescription) async {
+
   var androidDetails = AndroidNotificationDetails(
     'channelId', // Identificador único do canal
     'channelName', // Nome do canal
@@ -45,7 +56,7 @@ void scheduleHourlyNotification() async {
   await flutterLocalNotificationsPlugin.periodicallyShow(
     0,
     'ALERTA DO TEMPO',
-    'VAI TER TEMPESTADE CORRE',
+    alertDescription,
     RepeatInterval.everyMinute,
     generalNotificationDetails,
     androidAllowWhileIdle: true,
